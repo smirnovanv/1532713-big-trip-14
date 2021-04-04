@@ -70,7 +70,7 @@ const createAddForm = () => {
         <label class="event__label  event__type-output" for="event-destination-1">
           Flight
         </label>
-        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="Geneva" list="destination-list-1">
+        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="" list="destination-list-1">
         <datalist id="destination-list-1">
           <option value="Amsterdam"></option>
           <option value="Geneva"></option>
@@ -98,7 +98,19 @@ const createAddForm = () => {
       <button class="event__reset-btn" type="reset">Cancel</button>
     </header>
     <section class="event__details">
-      <section class="event__section  event__section--offers">
+
+
+
+    </section>
+  </form>
+</li>`;
+};
+
+export {createAddForm};
+
+/* offers
+
+<section class="event__section  event__section--offers">
         <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
         <div class="event__available-offers">
@@ -148,8 +160,10 @@ const createAddForm = () => {
           </div>
         </div>
       </section>
+*/
 
-      <section class="event__section  event__section--destination">
+/* DESTINATION
+<section class="event__section  event__section--destination">
         <h3 class="event__section-title  event__section-title--destination">Destination</h3>
         <p class="event__destination-description">Geneva is a city in Switzerland that lies at the southern tip of expansive Lac Léman (Lake Geneva). Surrounded by the Alps and Jura mountains, the city has views of dramatic Mont Blanc.</p>
 
@@ -163,9 +177,4 @@ const createAddForm = () => {
           </div>
         </div>
       </section>
-    </section>
-  </form>
-</li>`;
-};
-
-export {createAddForm};
+*/
