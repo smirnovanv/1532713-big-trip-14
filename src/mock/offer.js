@@ -7,9 +7,10 @@ const generateOffersList = () => {
   const offersList = [];
 
   for (let i = 0; i < getRandomInteger(0, shuffledOffers.length - 1); i++) {
-    const newOffer = {};
-    newOffer.title = shuffledOffers[i];
-    newOffer.price = getRandomInteger(10, 100);
+    const newOffer = {
+      title: shuffledOffers[i],
+      price: getRandomInteger(10, 100),
+    };
     offersList.push(newOffer);
   }
 

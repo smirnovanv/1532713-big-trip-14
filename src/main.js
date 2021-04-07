@@ -8,12 +8,12 @@ import {createRoutePoint} from './view/route-point.js';
 import {render} from './utils.js';
 import {addTripEventsList} from './view/events-list.js';
 import {generateEvent} from './mock/event.js';
-
-import './view/route-point.js';
+import {generatePossibleOffers} from './mock/offer.js';
 
 const POINTS_COUNT = 5;
 
 const points = new Array(POINTS_COUNT).fill().map(generateEvent);
+const possibleOffers = generatePossibleOffers();
 
 const tripMain = document.querySelector('.trip-main');
 const tripControlsNavigation = document.querySelector('.trip-controls__navigation');
@@ -27,7 +27,7 @@ render(tripEvents, createSorting(), 'beforeend');
 render(tripEvents, addTripEventsList(), 'beforeend');
 
 const tripEventsList = document.querySelector('.trip-events__list');
-render(tripEventsList, createEditForm(points[0]), 'beforeend');
+render(tripEventsList, createEditForm(points[0], possibleOffers), 'beforeend');
 render(tripEventsList, createAddForm(), 'beforeend');
 
 for (let i = 1; i < POINTS_COUNT; i++) {

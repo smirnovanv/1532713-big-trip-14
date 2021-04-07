@@ -1,64 +1,53 @@
-import dayjs from 'dayjs';
-import {generatePossibleOffers} from '../mock/offer.js';
+import {hideBlockIfEmpty, formatedFullDate} from '../utils.js';
 
-const createEditForm = (point) => {
-  const {type, destination, dateFrom, dateTo, basePrice, offers} = point;
+const createPicturesList = (pictures) => {
+  if (pictures.length === 0) {
+    return '';
+  } else {
+    const picturesList = pictures.map((picture) => `<img class="event__photo" src="${picture.src}" alt="picture.description">`);
+    return picturesList.join('');
+  }
+};
 
-  const isPhotos = () => {
-    if (destination.pictures.length === 0) {
-      return ' visually-hidden';
-    } else {return '';}
-  };
-  const createPicturesList = () => {
-    if (destination.pictures.length === 0) {
-      return '';
-    } else {
-      const picturesList = destination.pictures.map((picture) => `<img class="event__photo" src="${picture.src}" alt="picture.description">`);
-      return picturesList.join('');
-    }
-  };
+const createChosenOffersList = (chosenOffers) => {
+  if (chosenOffers.length === 0) {
+    return '';
+  } else {
+    const chosenOffersList = chosenOffers.map((offer) => `<div class="event__offer-selector">
+    <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" checked>
+    <label class="event__offer-label" for="event-offer-luggage-1">
+      <span class="event__offer-title">${offer.title}</span>
+      &plus;&euro;&nbsp;
+      <span class="event__offer-price">${offer.price}</span>
+    </label>
+  </div>`);
+    return chosenOffersList.join('');
+  }
+};
 
-  const createChosenOffersList = () => {
-    if (offers.length === 0) {
-      return '';
-    } else {
-      const chosenOffersList = offers.map((offer) => `<div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" checked>
+const createExtraOffersList = (chosenOffers, allOffers) => {
+  const currentOptions = new Set();
+  chosenOffers.forEach((offer) => {
+    currentOptions.add(offer.title);
+  });
+  const extraOffersList = [];
+  allOffers.forEach((option) => {
+    if (!currentOptions.has(option.title)) {
+      extraOffersList.push(`<div class="event__offer-selector">
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage">
       <label class="event__offer-label" for="event-offer-luggage-1">
-        <span class="event__offer-title">${offer.title}</span>
+        <span class="event__offer-title">${option.title}</span>
         &plus;&euro;&nbsp;
-        <span class="event__offer-price">${offer.price}</span>
+        <span class="event__offer-price">${option.price}</span>
       </label>
     </div>`);
-      return chosenOffersList.join('');
     }
-  };
+  });
+  return extraOffersList.join('');
+};
 
-  const possibleOffers = generatePossibleOffers();
-
-  const createExtraOffersList = () => {
-    const currentOptions = new Set();
-    offers.forEach((offer) => {
-      currentOptions.add(offer.title);
-    });
-    const extraOffersList = [];
-    possibleOffers.forEach((option) => {
-      if (!currentOptions.has(option.title)) {
-        extraOffersList.push(`<div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage">
-        <label class="event__offer-label" for="event-offer-luggage-1">
-          <span class="event__offer-title">${option.title}</span>
-          &plus;&euro;&nbsp;
-          <span class="event__offer-price">${option.price}</span>
-        </label>
-      </div>`);
-      }
-    });
-    return extraOffersList.join('');
-  };
-
-  const formatedDateFrom = dayjs(dateFrom).format('D/MM/YY HH:mm');
-  const formatedDateTo = dayjs(dateTo).format('D/MM/YY HH:mm');
+const createEditForm = (point, allTypeOffers) => {
+  const {type, destination, dateFrom, dateTo, basePrice, offers} = point;
 
   return `<li class="trip-events__item">
   <form class="event event--edit" action="#" method="post">
@@ -141,10 +130,10 @@ const createEditForm = (point) => {
 
       <div class="event__field-group  event__field-group--time">
         <label class="visually-hidden" for="event-start-time-1">From</label>
-        <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${formatedDateFrom}">
+        <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${formatedFullDate(dateFrom)}">
         &mdash;
         <label class="visually-hidden" for="event-end-time-1">To</label>
-        <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${formatedDateTo}">
+        <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${formatedFullDate(dateTo)}">
       </div>
 
       <div class="event__field-group  event__field-group--price">
@@ -165,17 +154,16 @@ const createEditForm = (point) => {
       <section class="event__section  event__section--offers">
         <h3 class="event__section-title  event__section-title--offers">Offers</h3>
         <div class="event__available-offers">
-        ${createChosenOffersList()}
-        ${createExtraOffersList()}
+        ${createChosenOffersList(offers)}
+        ${createExtraOffersList(offers, allTypeOffers)}
         </div>
       </section>
-
       <section class="event__section  event__section--destination">
         <h3 class="event__section-title  event__section-title--destination">Destination</h3>
         <p class="event__destination-description">${destination.description}</p>
-        <div class="event__photos-container ${isPhotos()}">
+        <div class="event__photos-container ${hideBlockIfEmpty(destination.pictures)}">
           <div class="event__photos-tape">
-          ${createPicturesList()}
+          ${createPicturesList(destination.pictures)}
           </div>
         </div>
       </section>
