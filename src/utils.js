@@ -1,7 +1,26 @@
 import dayjs from 'dayjs';
 
-const render = (container, template, place) => {
-  container.insertAdjacentHTML(place, template);
+const RenderPosition = {
+  AFTERBEGIN: 'afterbegin',
+  BEFOREEND: 'beforeend',
+};
+
+const render = (container, element, place) => {
+  switch (place) {
+    case RenderPosition.AFTERBEGIN:
+      container.prepend(element);
+      break;
+    case RenderPosition.BEFOREEND:
+      container.append(element);
+      break;
+  }
+};
+
+const createElement = (template) => {
+  const newElement = document.createElement('div'); // 1
+  newElement.innerHTML = template; // 2
+
+  return newElement.firstChild; // 3
 };
 
 const getRandomInteger = (a = 0, b = 1) => {
@@ -74,4 +93,4 @@ const formatDateTo = (firstDate, secondDate) => {
   return dayjs(secondDate).format(getFormat(firstDate, secondDate));
 };
 
-export {render, getRandomInteger, generateData, hideBlockIfEmpty, formatedFullDate, sortEventsByDate, formatMonthDayDate, formatDayDate, formatDateFrom, formatDateTo};
+export {RenderPosition, render, createElement, getRandomInteger, generateData, hideBlockIfEmpty, formatedFullDate, sortEventsByDate, formatMonthDayDate, formatDayDate, formatDateFrom, formatDateTo};

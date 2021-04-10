@@ -1,4 +1,4 @@
-import {sortEventsByDate, formatMonthDayDate, formatDayDate} from '../utils.js';
+import {createElement, sortEventsByDate, formatMonthDayDate, formatDayDate} from '../utils.js';
 
 const calculateCost = (points) => {
   let totalCost = 0;
@@ -39,7 +39,7 @@ const getDateInfo = (points) => {
   }
 };
 
-const createRouteInfoAndCost = (events) => {
+const createRouteInfoAndCostTemplate = (events) => {
   return `<section class="trip-main__trip-info  trip-info">
   <div class="trip-info__main">
     ${getRouteInfo(events)}
@@ -53,4 +53,25 @@ const createRouteInfoAndCost = (events) => {
 </section>`;
 };
 
-export {createRouteInfoAndCost};
+export default class RouteInfoAndCost {
+  constructor(points) {
+    this._points = points;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createRouteInfoAndCostTemplate(this._points);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
