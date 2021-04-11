@@ -1,4 +1,4 @@
-import {formatMonthDayDate, formatDateFrom, formatDateTo} from '../utils.js';
+import {formatMonthDayDate, formatDateFrom, formatDateTo, createElement} from '../utils.js';
 
 const getDuration = (firstDate, secondDate) => {
   const timeInMs = Date.parse(secondDate) - Date.parse(firstDate);
@@ -44,7 +44,7 @@ const getFavouriteClass = (favouriteStatus) => {
   }
 };
 
-const createRoutePoint = (point) => {
+const createRoutePointTemplate = (point) => {
   const {type, destination, dateFrom, dateTo, basePrice, offers, isFavourite} = point;
 
   return `<li class="trip-events__item">
@@ -80,4 +80,26 @@ const createRoutePoint = (point) => {
 </li>`;
 };
 
-export {createRoutePoint};
+export default class RoutePoint {
+  constructor(point) {
+    this._point = point;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createRoutePointTemplate(this._point);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
+

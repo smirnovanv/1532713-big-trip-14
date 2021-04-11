@@ -1,4 +1,4 @@
-import {hideBlockIfEmpty, formatedFullDate} from '../utils.js';
+import {hideBlockIfEmpty, formatedFullDate, createElement} from '../utils.js';
 
 const createPicturesList = (pictures) => {
   if (pictures.length === 0) {
@@ -46,7 +46,7 @@ const createExtraOffersList = (chosenOffers, allOffers) => {
   return extraOffersList.join('');
 };
 
-const createEditForm = (point, allTypeOffers) => {
+const createEditFormTemplate = (point, allTypeOffers) => {
   const {type, destination, dateFrom, dateTo, basePrice, offers} = point;
 
   return `<li class="trip-events__item">
@@ -172,4 +172,26 @@ const createEditForm = (point, allTypeOffers) => {
 </li>`;
 };
 
-export {createEditForm};
+export default class EditForm {
+  constructor (point, typeOffers) {
+    this._element = null;
+    this._point = point;
+    this._typeOffers = typeOffers;
+  }
+
+  getTemplate () {
+    return createEditFormTemplate(this._point, this._typeOffers);
+  }
+
+  getElement () {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
