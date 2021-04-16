@@ -1,4 +1,4 @@
-import {getRandomInteger} from '../utils.js';
+import {getRandomInteger} from '../utils/common.js';
 
 const OFFERS = ['Choose meal', 'Upgrade to comfort class', 'Choose seats', 'Add luggage', 'Travel by train'];
 

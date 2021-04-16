@@ -1,4 +1,6 @@
-import {hideBlockIfEmpty, formatedFullDate, createElement} from '../utils.js';
+import AbstractView from './abstract.js';
+import {hideBlockIfEmpty} from '../utils/render.js';
+import {formatedFullDate} from '../utils/point.js';
 
 const createPicturesList = (pictures) => {
   if (pictures.length === 0) {
@@ -172,26 +174,40 @@ const createEditFormTemplate = (point, allTypeOffers) => {
 </li>`;
 };
 
-export default class EditForm {
+export default class EditForm extends AbstractView {
   constructor (point, typeOffers) {
-    this._element = null;
+    super();
     this._point = point;
     this._typeOffers = typeOffers;
+    this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._clickHandler = this._clickHandler.bind(this);
   }
 
   getTemplate () {
     return createEditFormTemplate(this._point, this._typeOffers);
   }
 
-  getElement () {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _formSubmitHandler (evt) {
+    evt.preventDefault();
+    this._callback.formSubmit();
   }
 
-  removeElement() {
-    this._element = null;
+  _clickHandler () {
+    this._callback.click();
+  }
+
+  setFormSubmitHandler (callback) {
+    this._callback.formSubmit = callback;
+    this.getElement().querySelector('form').addEventListener('submit', this._formSubmitHandler);
+  }
+
+  setEditClickHandler (callback) {
+    this._callback.click = callback;
+    this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._clickHandler);
+  }
+
+  setExitClickHandler (callback) {
+    this._callback.click = callback;
+    this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._clickHandler);
   }
 }
