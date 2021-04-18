@@ -1,4 +1,5 @@
-import {formatMonthDayDate, formatDateFrom, formatDateTo, createElement} from '../utils.js';
+import AbstractView from './abstract.js';
+import {formatMonthDayDate, formatDateFrom, formatDateTo} from '../utils/point.js';
 
 const getDuration = (firstDate, secondDate) => {
   const timeInMs = Date.parse(secondDate) - Date.parse(firstDate);
@@ -80,26 +81,24 @@ const createRoutePointTemplate = (point) => {
 </li>`;
 };
 
-export default class RoutePoint {
-  constructor(point) {
+export default class RoutePoint extends AbstractView {
+  constructor (point) {
+    super();
     this._point = point;
-    this._element = null;
+    this._editClickHandler = this._editClickHandler.bind(this);
   }
 
-  getTemplate() {
+  getTemplate () {
     return createRoutePointTemplate(this._point);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _editClickHandler (evt) {
+    evt.preventDefault();
+    this._callback.click();
   }
 
-  removeElement() {
-    this._element = null;
+  setEditClickHandler(callback) {
+    this._callback.click = callback;
+    this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._editClickHandler);
   }
 }
-

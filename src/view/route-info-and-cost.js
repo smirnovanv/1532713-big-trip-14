@@ -1,4 +1,5 @@
-import {createElement, sortEventsByDate, formatMonthDayDate, formatDayDate} from '../utils.js';
+import AbstractView from './abstract.js';
+import {sortEventsByDate, formatMonthDayDate, formatDayDate} from '../utils/point.js';
 
 const calculateCost = (points) => {
   let totalCost = 0;
@@ -53,25 +54,13 @@ const createRouteInfoAndCostTemplate = (events) => {
 </section>`;
 };
 
-export default class RouteInfoAndCost {
+export default class RouteInfoAndCost extends AbstractView {
   constructor(points) {
+    super();
     this._points = points;
-    this._element = null;
   }
 
   getTemplate() {
     return createRouteInfoAndCostTemplate(this._points);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
