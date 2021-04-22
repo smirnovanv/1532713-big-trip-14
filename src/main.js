@@ -2,7 +2,7 @@ import MenuView from './view/menu.js';
 import RouteInfoAndCostView from './view/route-info-and-cost.js';
 import FiltersView from './view/filters.js';
 //import AddFormView from './view/add-form.js';
-import {render, RenderPosition} from './utils/render.js';;
+import {render, RenderPosition} from './utils/render.js';
 import {generateEvent} from './mock/event.js';
 import BoardPresenter from './presenter/board.js';
 
