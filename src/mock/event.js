@@ -1,6 +1,7 @@
 import {getRandomInteger, generateData} from '../utils/common.js';
 import {generateOffersList} from './offer.js';
 import dayjs from 'dayjs';
+import {nanoid} from 'nanoid';
 
 const EVENT_TYPES = ['taxi', 'bus', 'train', 'ship', 'transport', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
 const DESTINATIONS = ['Amsterdam', 'Charmonix', 'Geneva', 'Paris', 'London'];
@@ -50,6 +51,7 @@ const generateEvent = () => {
   };
 
   return {
+    id: nanoid(),
     type: generateData(EVENT_TYPES),
     destination: {
       description: generateDescription(),
