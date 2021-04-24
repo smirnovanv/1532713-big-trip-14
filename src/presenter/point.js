@@ -31,16 +31,14 @@ export default class Point {
     const prevPointComponent = this._pointComponent;
     const prevEditComponent = this._pointEditComponent;
 
-    this._offersComponent = generatePossibleOffers();
+    this._offers = generatePossibleOffers();
     this._pointComponent = new RoutePointView(point);
-    this._pointEditComponent = new EditFormView(point, this._offersComponent);
+    this._pointEditComponent = new EditFormView(point, this._offers);
 
     this._pointComponent.setEditClickHandler(this._handleEditClick);
     this._pointComponent.setFavouriteClickHandler(this._handleFavouriteClick);
     this._pointEditComponent.setFormSubmitHandler(this._handleFormSubmit);
     this._pointEditComponent.setExitClickHandler(this._handleExitClick);
-
-    //render(this._pointsListContainer, this._pointComponent, RenderPosition.BEFOREEND);
 
     if (prevPointComponent === null || prevEditComponent === null) {
       render(this._pointsListContainer, this._pointComponent, RenderPosition.BEFOREEND);
@@ -109,7 +107,6 @@ export default class Point {
 
   _handleFormSubmit () {
     this._replaceFormByPoint();
-    document.addEventListener('keydown', this._escKeyDownHandler);
   }
 
   _handleExitClick () {

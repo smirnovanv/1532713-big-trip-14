@@ -29,6 +29,19 @@ const sortEventsByDate = (points) => {
   return sortedEvents;
 };
 
+export const sortEventsByPrice = (pointA, pointB) => {
+
+  return pointB.basePrice - pointA.basePrice;
+};
+
+export const sortEventsByDuration = (pointA, pointB) => {
+  //return dayjs(taskA.dueDate).diff(dayjs(taskB.dueDate));
+  const getDuration = (point) => {
+    return dayjs(point.dateTo) - dayjs(point.dateFrom);
+  };
+  return getDuration(pointB) - getDuration(pointA);
+};
+
 const formatMonthDayDate = (date) => {
   return dayjs(date).format('MMM D');
 };
