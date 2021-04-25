@@ -18,13 +18,13 @@ const getRouteInfo = (points) => {
   } else if (points.length === 1) {
     return points[0].destination.name;
   } else if (points.length === 2) {
-    const sortedEvents = sortEventsByDate(points);
+    const sortedEvents = points.sort(sortEventsByDate);
     return `<h1 class="trip-info__title">${sortedEvents[0].destination.name} &mdash; ${sortedEvents[1].destination.name}</h1>`;
   } else if (points.length === 3) {
-    const sortedEvents = sortEventsByDate(points);
+    const sortedEvents = points.sort(sortEventsByDate);
     return `<h1 class="trip-info__title">${sortedEvents[0].destination.name} &mdash; ${sortedEvents[1].destination.name} &mdash; ${sortedEvents[2].destination.name}</h1>`;
   } else if (points.length > 3) {
-    const sortedEvents = sortEventsByDate(points);
+    const sortedEvents = points.sort(sortEventsByDate);
     return `<h1 class="trip-info__title">${sortedEvents[0].destination.name} &mdash; ... &mdash; ${sortedEvents[sortedEvents.length-1].destination.name}</h1>`;
   }
 };
@@ -35,7 +35,7 @@ const getDateInfo = (points) => {
   } else if (points.length === 1) {
     return `<p class="trip-info__dates">${formatMonthDayDate(points[0].dateFrom)}</p>`;
   } else if (points.length > 1) {
-    const sortedEvents = sortEventsByDate(points);
+    const sortedEvents = points.sort(sortEventsByDate);
     return `<p class="trip-info__dates">${formatMonthDayDate(sortedEvents[0].dateFrom)}&nbsp;&mdash;&nbsp;${formatDayDate(sortedEvents[sortedEvents.length-1].dateTo)}</p>`;
   }
 };

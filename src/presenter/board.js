@@ -24,8 +24,9 @@ export default class Board {
   }
 
   init(boardPoints) {
-    this._boardPoints = sortEventsByDate(boardPoints).reverse().slice();
-    this._sourcedBoardPoints = sortEventsByDate(boardPoints).reverse().slice();
+    this._boardPoints = boardPoints.slice();
+    this._boardPoints.sort(sortEventsByDate).reverse();
+    this._sourcedBoardPoints = this._boardPoints.sort(sortEventsByDate).reverse();
     this._renderBoard();
   }
 
@@ -54,7 +55,7 @@ export default class Board {
         this._boardPoints.sort(sortEventsByDuration);
         break;
       case SortType.DATE_UP:
-        this._boardPoints = sortEventsByDate(this._boardPoints).reverse().slice();
+        this._boardPoints.sort(sortEventsByDate).reverse();
         break;
       default:
         //как проверить, что дефолт работает? в каком случае нужен?
