@@ -2,31 +2,20 @@ import dayjs from 'dayjs';
 
 const formatedFullDate = (date) => {return dayjs(date).format('D/MM/YY HH:mm');};
 
-const sortEventsByDate = (points) => {
-  const copiedEventsList = points.slice();
-  const sortedEvents = [];
+const sortEventsByDate = (pointA, pointB) => {
+  return pointA.dateFrom - pointB.dateFrom;
+};
 
-  const getEarliestEvent = () => {
-    if (copiedEventsList.length === 0) {
-      return '';
-    } else {
-      let earliestEvent = copiedEventsList[0];
-      let index = 0;
-      for (let i = 0; i < copiedEventsList.length; i++) {
-        if (dayjs(copiedEventsList[i].dateFrom).isBefore(earliestEvent.dateFrom)) {
-          earliestEvent = copiedEventsList[i];
-          index++;
-        }
-      }
-      copiedEventsList.splice(index, 1);
-      sortedEvents.push(earliestEvent);
-    }
+export const sortEventsByPrice = (pointA, pointB) => {
+
+  return pointB.basePrice - pointA.basePrice;
+};
+
+export const sortEventsByDuration = (pointA, pointB) => {
+  const getDuration = (point) => {
+    return dayjs(point.dateTo) - dayjs(point.dateFrom);
   };
-
-  while (copiedEventsList.length > 0) {
-    getEarliestEvent();
-  }
-  return sortedEvents;
+  return getDuration(pointB) - getDuration(pointA);
 };
 
 const formatMonthDayDate = (date) => {
