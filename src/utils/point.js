@@ -1,4 +1,10 @@
 import dayjs from 'dayjs';
+import {possibleOffers} from '../const.js';
+
+const getPossibleOffers = (point) => {
+  const currentType = point.type;
+  return possibleOffers.filter((offer) => offer.type === currentType)[0].offers;
+};
 
 const formatedFullDate = (date) => {return dayjs(date).format('D/MM/YY HH:mm');};
 
@@ -42,4 +48,4 @@ const formatDateTo = (firstDate, secondDate) => {
   return dayjs(secondDate).format(getFormat(firstDate, secondDate));
 };
 
-export {formatedFullDate, sortEventsByDate, formatMonthDayDate, formatDayDate, formatDateFrom, formatDateTo};
+export {formatedFullDate, sortEventsByDate, formatMonthDayDate, formatDayDate, formatDateFrom, formatDateTo, getPossibleOffers};
