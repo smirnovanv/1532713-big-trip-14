@@ -6,6 +6,8 @@ import {render, RenderPosition} from './utils/render.js';
 import {generateEvent} from './mock/event.js';
 import BoardPresenter from './presenter/board.js';
 
+import './view/edit-form.js';
+
 const POINTS_COUNT = 4;
 
 const points = new Array(POINTS_COUNT).fill().map(generateEvent);

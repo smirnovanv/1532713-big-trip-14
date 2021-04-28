@@ -5,6 +5,9 @@ import {TYPES} from '../const.js';
 import {getPossibleOffers} from '../utils/point.js';
 import {nanoid} from 'nanoid';
 import {destinationsData} from '../mock/event.js';
+import flatpickr from 'flatpickr';
+
+import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 
 const BLANK_POINT = {
   id: nanoid(),
@@ -172,14 +175,21 @@ export default class EditForm extends SmartView {
     super();
     //this._point = point;
     this._state = EditForm.parsePointToState(point);
+    this._datepickerFrom = null;
+    this._datepickerTo = null;
+
     this._typeOffers = typeOffers;
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._priceInputHandler = this._priceInputHandler.bind(this);
     this._clickHandler = this._clickHandler.bind(this);
     this._typeChangeHandler = this._typeChangeHandler.bind(this);
     this._destinationInputHandler = this._destinationInputHandler.bind(this);
+    this._dateFromChangeHandler = this._dateFromChangeHandler.bind(this);
+    this._dateToChangeHandler = this._dateToChangeHandler.bind(this);
 
     this._setInnerHandlers();
+    this._setDatepickerFrom();
+    this._setDatepickerTo();
   }
 
   reset (point) {
@@ -192,8 +202,58 @@ export default class EditForm extends SmartView {
 
   restoreHandlers () {
     this._setInnerHandlers();
+    this._setDatepickerFrom();
+    this._setDatepickerTo();
     this.setFormSubmitHandler(this._callback.formSubmit);
     this.setExitClickHandler(this._callback.click);
+  }
+
+  _setDatepickerFrom() {
+    if (this._datepickerFrom) {
+      // В случае обновления компонента удаляем вспомогательные DOM-элементы,
+      // которые создает flatpickr при инициализации
+      this._datepickerFrom.destroy();
+      this._datepickerFrom = null;
+    }
+
+    this._datepickerFrom = flatpickr(
+      this.getElement().querySelector('[name="event-start-time"]'),
+      {
+        dateFormat: 'j/n/Y H:i',
+        defaultDate: this._state.dateFrom,
+        onChange: this._dateFromChangeHandler, // На событие flatpickr передаём наш колбэк
+      },
+    );
+  }
+
+  _setDatepickerTo() {
+    if (this._datepickerTo) {
+      // В случае обновления компонента удаляем вспомогательные DOM-элементы,
+      // которые создает flatpickr при инициализации
+      this._datepickerTo.destroy();
+      this._datepickerTo = null;
+    }
+
+    this._datepickerTo = flatpickr(
+      this.getElement().querySelector('[name="event-end-time"]'),
+      {
+        dateFormat: 'j/n/Y H:i',
+        defaultDate: this._state.dateTo,
+        onChange: this._dateToChangeHandler, // На событие flatpickr передаём наш колбэк
+      },
+    );
+  }
+
+  _dateFromChangeHandler([userDate]) {
+    this.updateData({
+      dateFrom: userDate,
+    });
+  }
+
+  _dateToChangeHandler([userDate]) {
+    this.updateData({
+      dateTo: userDate,
+    });
   }
 
   _setInnerHandlers () {
