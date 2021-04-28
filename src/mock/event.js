@@ -66,4 +66,19 @@ const generateEvent = () => {
   };
 };
 
-export {generateEvent};
+const generateDestinations = () => {
+  const destinations = [];
+  DESTINATIONS.forEach((destination) => {
+    const newDestination = {
+      description: generateDescription(),
+      name: destination,
+      pictures: generatePictures(),
+    };
+    destinations.push(newDestination);
+  });
+  return destinations;
+};
+
+const destinationsData = generateDestinations();
+
+export {generateEvent, destinationsData};

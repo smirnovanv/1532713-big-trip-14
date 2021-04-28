@@ -4,6 +4,7 @@ import {formatedFullDate} from '../utils/point.js';
 import {TYPES} from '../const.js';
 import {getPossibleOffers} from '../utils/point.js';
 import {nanoid} from 'nanoid';
+import {destinationsData} from '../mock/event.js';
 
 const BLANK_POINT = {
   id: nanoid(),
@@ -79,6 +80,10 @@ const createEditFormTypeTemplate = (currentType) => {
 </div>`).join('');
 };
 
+const createEditFormDestinationsTemplate = (point) => {
+  return destinationsData.map((destination) => `<option value="${destination.name}"${destination.name === point.destination.name ? ' selected' : ''}></option>`).join('');
+};
+
 const hideOffersSection = (point) => {
   if (getPossibleOffers(point).length === 0) {
     return ' visually-hidden';}
@@ -114,9 +119,7 @@ const createEditFormTemplate = (point = BLANK_POINT) => {
         </label>
         <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.name}" list="destination-list-1">
         <datalist id="destination-list-1">
-          <option value="Amsterdam"></option>
-          <option value="Geneva"></option>
-          <option value="Chamonix"></option>
+        ${createEditFormDestinationsTemplate(point)}
         </datalist>
       </div>
 
@@ -133,7 +136,7 @@ const createEditFormTemplate = (point = BLANK_POINT) => {
           <span class="visually-hidden">Price</span>
           &euro;
         </label>
-        <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${basePrice}">
+        <input class="event__input  event__input--price" id="event-price-1" name="event-price" value="${basePrice}" type="number" step="1" min="1">
       </div>
 
       <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -215,16 +218,11 @@ export default class EditForm extends SmartView {
 
   _destinationInputHandler (evt) {
     evt.preventDefault();
-    this.updateData({
-      destination: Object.assign(
-        {},
-        this._state.destination,
-        {name: evt.target.value},
-      ),
-    }, true);
-    //План(?): описание и картинки в дальнейшем будут фильтроваться по имени точки
-    //название должно соответствовать одной из точек в option - отрисуются с сервера
-    //при соответствии option value и value input, опция отметится как selected -> на основе этого отрисуются фото и описание
+    if (destinationsData.some((destination) => destination.name === evt.target.value)) {
+      this.updateData({
+        destination: {name: evt.target.value, description: destinationsData.filter((destination) => destination.name === evt.target.value)[0].description, pictures: destinationsData.filter((destination) => destination.name === evt.target.value)[0].pictures},
+      });
+    }
   }
 
   _formSubmitHandler (evt) {
@@ -315,4 +313,10 @@ export default class EditForm extends SmartView {
               <input id="event-type-restaurant-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="restaurant">
               <label class="event__type-label  event__type-label--restaurant" for="event-type-restaurant-1">Restaurant</label>
             </div>
+*/
+
+/*
+<option value="Amsterdam"></option>
+          <option value="Geneva"></option>
+          <option value="Chamonix"></option>
 */
