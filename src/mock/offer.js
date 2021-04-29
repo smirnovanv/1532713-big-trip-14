@@ -17,6 +17,7 @@ const generateOffersList = () => {
   return offersList;
 };
 
+
 const generatePossibleOffers = () => {
   const shuffledOffers = OFFERS.sort(() => Math.random() - 0.5);
   const possibleOffersList = [];

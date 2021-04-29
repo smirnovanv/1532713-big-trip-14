@@ -1,7 +1,9 @@
 import RoutePointView from '../view/route-point.js';
 import EditFormView from '../view/edit-form.js';
-import {generatePossibleOffers} from '../mock/offer.js';
+//import {generatePossibleOffers} from '../mock/offer.js';
 import {render, RenderPosition, replace, remove} from '../utils/render.js';
+
+import {getPossibleOffers} from '../utils/point.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -31,9 +33,14 @@ export default class Point {
     const prevPointComponent = this._pointComponent;
     const prevEditComponent = this._pointEditComponent;
 
-    this._offers = generatePossibleOffers();
+    //const getPossibleOffers = (point) => {
+    //  return possibleOffers.filter((offer) => offer.type === point.type)[0].offers;
+    //};
+
+    //this._offers = getPossibleOffers();
+    //this._offers = generatePossibleOffers();
     this._pointComponent = new RoutePointView(point);
-    this._pointEditComponent = new EditFormView(point, this._offers);
+    this._pointEditComponent = new EditFormView(point, getPossibleOffers(this._point));
 
     this._pointComponent.setEditClickHandler(this._handleEditClick);
     this._pointComponent.setFavouriteClickHandler(this._handleFavouriteClick);
@@ -85,6 +92,7 @@ export default class Point {
   _escKeyDownHandler (evt) {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
+      this._pointEditComponent.reset(this._point);
       this._replaceFormByPoint();
     }
   }
@@ -106,11 +114,13 @@ export default class Point {
     document.addEventListener('keydown', this._escKeyDownHandler);
   }
 
-  _handleFormSubmit () {
+  _handleFormSubmit (point) {
+    this._changeData(point);
     this._replaceFormByPoint();
   }
 
   _handleExitClick () {
+    this._pointEditComponent.reset(this._point);
     this._replaceFormByPoint();
   }
 }
