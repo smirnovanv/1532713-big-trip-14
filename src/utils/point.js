@@ -17,10 +17,11 @@ export const sortEventsByPrice = (pointA, pointB) => {
   return pointB.basePrice - pointA.basePrice;
 };
 
+const getDuration = (point) => {
+  return dayjs(point.dateTo) - dayjs(point.dateFrom);
+};
+
 export const sortEventsByDuration = (pointA, pointB) => {
-  const getDuration = (point) => {
-    return dayjs(point.dateTo) - dayjs(point.dateFrom);
-  };
   return getDuration(pointB) - getDuration(pointA);
 };
 
@@ -46,6 +47,18 @@ const formatDateFrom = (firstDate, secondDate) => {
 
 const formatDateTo = (firstDate, secondDate) => {
   return dayjs(secondDate).format(getFormat(firstDate, secondDate));
+};
+
+export const isDateSame = (dateA, dateB) => {
+  return dayjs(dateA).isSame(dateB);
+};
+
+export const isDurationSame = (pointA, pointB) => {
+  return getDuration(pointA) === getDuration(pointB);
+};
+
+export const isPriceSame = (priceA, priceB) => {
+  return priceA === priceB;
 };
 
 export {formatedFullDate, sortEventsByDate, formatMonthDayDate, formatDayDate, formatDateFrom, formatDateTo, getPossibleOffers};

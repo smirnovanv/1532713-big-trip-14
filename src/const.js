@@ -1,5 +1,17 @@
 const TYPES = ['taxi', 'bus', 'train', 'ship', 'transport', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
 
+const UserAction = {
+  UPDATE_POINT: 'UPDATE_POINT',
+  ADD_POINT: 'ADD_POINT',
+  DELETE_POINT: 'DELETE_POINT',
+};
+
+const UpdateType = {
+  PATCH: 'PATCH',
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR',
+};
+
 const SortType = {
   DATE_UP: 'date-up',
   PRICE_DOWN: 'price-down',
@@ -120,6 +132,6 @@ const possibleOffers = [
   },
 ];
 
-export {SortType, TYPES, possibleOffers};
+export {SortType, TYPES, possibleOffers, UserAction, UpdateType};
 
 

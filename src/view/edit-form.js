@@ -182,6 +182,7 @@ export default class EditForm extends SmartView {
 
     this._typeOffers = typeOffers;
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._formDeleteClickHandler = this._formDeleteClickHandler.bind(this);
     this._priceInputHandler = this._priceInputHandler.bind(this);
     this._clickHandler = this._clickHandler.bind(this);
     this._typeChangeHandler = this._typeChangeHandler.bind(this);
@@ -193,6 +194,20 @@ export default class EditForm extends SmartView {
     this._setInnerHandlers();
     this._setDatepickerFrom();
     this._setDatepickerTo();
+  }
+
+  removeElement() {
+    super.removeElement();
+
+    if (this._datepickerFrom) {
+      this._datepickerFrom.destroy();
+      this._datepickerFrom = null;
+    }
+
+    if (this._datepickerTo) {
+      this._datepickerTo.destroy();
+      this._datepickerTo = null;
+    }
   }
 
   reset (point) {
@@ -208,6 +223,7 @@ export default class EditForm extends SmartView {
     this._setDatepickerFrom();
     this._setDatepickerTo();
     this.setFormSubmitHandler(this._callback.formSubmit);
+    this.setDeleteClickHandler(this._callback.deleteClick);
     this.setExitClickHandler(this._callback.click);
   }
 
@@ -287,13 +303,13 @@ export default class EditForm extends SmartView {
   _offersChangeHandler (evt) {
     if (this._state.offers.some((offer) => offer.title.toLowerCase().split(' ').join('-') === evt.target.dataset.offer)) {
       this.updateData({
-        offers: this._state.offers.filter((offer) => offer.title.toLowerCase().split(' ').join('-') !== evt.target.dataset.offer),
+        offers: this._state.offers.slice().filter((offer) => offer.title.toLowerCase().split(' ').join('-') !== evt.target.dataset.offer),
       });
     } else {
       const newCheckedOffer = getPossibleOffers(this._state).slice().filter((offer) => offer.title.toLowerCase().split(' ').join('-') === evt.target.dataset.offer)[0];
       this._state.offers.push(newCheckedOffer);
       this.updateData({
-        offers: this._state.offers,
+        offers: this._state.offers.slice(),
       });
     }
   }
@@ -329,6 +345,16 @@ export default class EditForm extends SmartView {
   setExitClickHandler (callback) {
     this._callback.click = callback;
     this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._clickHandler);
+  }
+
+  _formDeleteClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.deleteClick(EditForm.parseStateToPoint(this._state));
+  }
+
+  setDeleteClickHandler(callback) {
+    this._callback.deleteClick = callback;
+    this.getElement().querySelector('.event__reset-btn').addEventListener('click', this._formDeleteClickHandler);
   }
 
   static parsePointToState (point) {
