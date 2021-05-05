@@ -3,26 +3,11 @@ import {hideBlockIfEmpty} from '../utils/render.js';
 import {formatedFullDate} from '../utils/point.js';
 import {TYPES} from '../const.js';
 import {getPossibleOffers} from '../utils/point.js';
-import {nanoid} from 'nanoid';
 import {destinationsData} from '../mock/event.js';
 import flatpickr from 'flatpickr';
+import {BLANK_POINT} from '../const.js';
 
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
-
-const BLANK_POINT = {
-  id: nanoid(),
-  type: 'taxi',
-  destination: {
-    description: '',
-    name: '',
-    pictures: [],
-  },
-  dateFrom: '',
-  dateTo: '',
-  basePrice: '',
-  offers: [],
-  isFavourite: false,
-};
 
 const createPicturesList = (pictures) => {
   if (pictures.length === 0) {
@@ -95,6 +80,17 @@ const hideOffersSection = (point) => {
   return '';
 };
 
+const createEditButtonsTemplate = (point) => {
+  if (point.isPointNew) {
+    return '<button class="event__reset-btn" type="reset">Cancel</button>';
+  } else {
+    return `<button class="event__reset-btn" type="reset">Delete</button>
+    <button class="event__rollup-btn" type="button">
+      <span class="visually-hidden">Open event</span>
+    </button>`;
+  }
+};
+
 const createEditFormTemplate = (point = BLANK_POINT) => {
   const {type, destination, dateFrom, dateTo, basePrice, offers} = point;
 
@@ -122,7 +118,7 @@ const createEditFormTemplate = (point = BLANK_POINT) => {
         <label class="event__label  event__type-output" for="event-destination-1">
           ${type}
         </label>
-        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.name}" list="destination-list-1">
+        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.name}" list="destination-list-1" required>
         <datalist id="destination-list-1">
         ${createEditFormDestinationsTemplate(point)}
         </datalist>
@@ -141,14 +137,11 @@ const createEditFormTemplate = (point = BLANK_POINT) => {
           <span class="visually-hidden">Price</span>
           &euro;
         </label>
-        <input class="event__input  event__input--price" id="event-price-1" name="event-price" value="${basePrice}" type="number" step="1" min="1">
+        <input class="event__input  event__input--price" id="event-price-1" name="event-price" value="${basePrice}" type="number" step="1" min="1" required>
       </div>
 
       <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-      <button class="event__reset-btn" type="reset">Delete</button>
-      <button class="event__rollup-btn" type="button">
-        <span class="visually-hidden">Open event</span>
-      </button>
+      ${createEditButtonsTemplate(point)}
     </header>
     <section class="event__details">
       <section class="event__section  event__section--offers${hideOffersSection(point)}">
@@ -173,9 +166,8 @@ const createEditFormTemplate = (point = BLANK_POINT) => {
 };
 
 export default class EditForm extends SmartView {
-  constructor (point, typeOffers) {
+  constructor (typeOffers, point = BLANK_POINT) {
     super();
-    //this._point = point;
     this._state = EditForm.parsePointToState(point);
     this._datepickerFrom = null;
     this._datepickerTo = null;
@@ -224,13 +216,13 @@ export default class EditForm extends SmartView {
     this._setDatepickerTo();
     this.setFormSubmitHandler(this._callback.formSubmit);
     this.setDeleteClickHandler(this._callback.deleteClick);
-    this.setExitClickHandler(this._callback.click);
+    if (!this._state.isPointNew) {
+      this.setExitClickHandler(this._callback.click);
+    }
   }
 
   _setDatepickerFrom() {
     if (this._datepickerFrom) {
-      // В случае обновления компонента удаляем вспомогательные DOM-элементы,
-      // которые создает flatpickr при инициализации
       this._datepickerFrom.destroy();
       this._datepickerFrom = null;
     }
@@ -242,15 +234,13 @@ export default class EditForm extends SmartView {
         defaultDate: this._state.dateFrom,
         enableTime: true,
         onClose: this._dateFromChangeHandler,
-        maxDate: this._state.dateTo, // На событие flatpickr передаём наш колбэк
+        maxDate: this._state.dateTo,
       },
     );
   }
 
   _setDatepickerTo() {
     if (this._datepickerTo) {
-      // В случае обновления компонента удаляем вспомогательные DOM-элементы,
-      // которые создает flatpickr при инициализации
       this._datepickerTo.destroy();
       this._datepickerTo = null;
     }
@@ -261,7 +251,7 @@ export default class EditForm extends SmartView {
         dateFormat: 'j/n/Y H:i',
         defaultDate: this._state.dateTo,
         enableTime: true,
-        onClose: this._dateToChangeHandler, // На событие flatpickr передаём наш колбэк
+        onClose: this._dateToChangeHandler,
         minDate: this._state.dateFrom,
       },
     );
@@ -307,9 +297,8 @@ export default class EditForm extends SmartView {
       });
     } else {
       const newCheckedOffer = getPossibleOffers(this._state).slice().filter((offer) => offer.title.toLowerCase().split(' ').join('-') === evt.target.dataset.offer)[0];
-      this._state.offers.push(newCheckedOffer);
       this.updateData({
-        offers: this._state.offers.slice(),
+        offers: this._state.offers.slice().concat(newCheckedOffer),
       });
     }
   }
@@ -361,11 +350,17 @@ export default class EditForm extends SmartView {
     return Object.assign(
       {},
       point,
+      {
+        isPointNew: point.destination.name === '',
+      },
     );
   }
 
   static parseStateToPoint (state) {
     state = Object.assign({}, state);
+
+    delete state.isPointNew;
+
     return state;
   }
 }

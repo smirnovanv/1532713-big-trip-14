@@ -1,4 +1,22 @@
+import dayjs from 'dayjs';
+import {nanoid} from 'nanoid';
+
 const TYPES = ['taxi', 'bus', 'train', 'ship', 'transport', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
+
+export const BLANK_POINT = {
+  id: nanoid(),
+  type: 'taxi',
+  destination: {
+    description: '',
+    name: '',
+    pictures: [],
+  },
+  dateFrom: dayjs().toDate(),
+  dateTo: dayjs().toDate(),
+  basePrice: '',
+  offers: [],
+  isFavourite: false,
+};
 
 const UserAction = {
   UPDATE_POINT: 'UPDATE_POINT',
@@ -16,6 +34,12 @@ const SortType = {
   DATE_UP: 'date-up',
   PRICE_DOWN: 'price-down',
   DURATION_DOWN: 'duration-down',
+};
+
+export const FilterType = {
+  EVERYTHING: 'everything',
+  FUTURE: 'future',
+  PAST: 'past',
 };
 
 const possibleOffers = [

@@ -3,50 +3,64 @@ import EmptyList from '../view/empty-list.js';
 import SortingView from '../view/sorting.js';
 import {render, RenderPosition, remove} from '../utils/render.js';
 import PointPresenter from './point.js';
-//import {updateItem} from '../utils/common.js';
+import PointNewPresenter from './point-new.js';
 import {sortEventsByDate, sortEventsByPrice, sortEventsByDuration} from '../utils/point.js';
-import {SortType, UpdateType, UserAction} from '../const.js';
+import {SortType, UpdateType, UserAction, FilterType} from '../const.js';
+import {filter} from '../utils/filter.js';
 
 
 export default class Board {
-  constructor (boardContainer, pointsModel) {
+  constructor (boardContainer, pointsModel, filterModel) {
     this._pointsModel = pointsModel;
+    this._filterModel = filterModel;
     this._boardContainer = boardContainer;
     this._pointPresenter = {};
     this._currentSortType = SortType.DATE_UP;
 
     this._sortingComponent = null;
 
-    //this._sortingComponent = new SortingView();
     this._tripEventsListComponent = new TripEventsListView();
     this._emptyListComponent = new EmptyList();
 
-    //this._handlePointChange = this._handlePointChange.bind(this);
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
 
     this._pointsModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
+
+    this._pointNewPresenter = new PointNewPresenter(this._tripEventsListComponent, this._handleViewAction);
   }
 
   init() {
     this._renderBoard();
   }
 
+  createPoint() {
+    this._currentSortType = SortType.DATE_UP;
+    this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+    this._pointNewPresenter.init();
+  }
+
   _getPoints () {
+    const filterType = this._filterModel.getFilter();
+    const points = this._pointsModel.getPoints();
+    const filteredPoints = filter[filterType](points);
+
     switch (this._currentSortType) {
       case SortType.PRICE_DOWN:
-        return this._pointsModel.getPoints().slice().sort(sortEventsByPrice);
+        return filteredPoints.sort(sortEventsByPrice);
       case SortType.DURATION_DOWN:
-        return this._pointsModel.getPoints().slice().sort(sortEventsByDuration);
+        return filteredPoints.sort(sortEventsByDuration);
       case SortType.DATE_UP:
-        return this._pointsModel.getPoints().slice().sort(sortEventsByDate);
+        return filteredPoints.sort(sortEventsByDate);
     }
-    return this._pointsModel.getPoints();
+    return filteredPoints;
   }
 
   _handleModeChange() {
+    this._pointNewPresenter.destroy();
     Object
       .values(this._pointPresenter)
       .forEach((presenter) => presenter.resetView());
@@ -117,6 +131,8 @@ export default class Board {
   }
 
   _clearBoard({resetSortType = false} = {}) {
+    this._pointNewPresenter.destroy();
+
     Object
       .values(this._pointPresenter)
       .forEach((presenter) => presenter.destroy());
