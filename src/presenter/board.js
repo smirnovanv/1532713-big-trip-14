@@ -107,9 +107,6 @@ export default class Board {
   }
 
   _renderSort () {
-    if (this._sortingComponent !== null) {
-      this._sortingComponent = null;
-    }
     this._sortingComponent = new SortingView(this._currentSortType);
     this._sortingComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
     render(this._boardContainer, this._sortingComponent, RenderPosition.BEFOREEND);
