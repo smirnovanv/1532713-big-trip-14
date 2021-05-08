@@ -9,6 +9,8 @@ const generateData = (data) => {
   return data[getRandomInteger(0, data.length - 1)];
 };
 
+/*
+
 const updateItem = (items, update) => {
   const index = items.findIndex((item) => item.id === update.id);
 
@@ -23,5 +25,5 @@ const updateItem = (items, update) => {
   ];
 
 };
-
-export {getRandomInteger, generateData, updateItem};
+*/
+export {getRandomInteger, generateData};
