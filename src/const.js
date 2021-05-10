@@ -30,6 +30,11 @@ const UpdateType = {
   MAJOR: 'MAJOR',
 };
 
+export const MenuItem = {
+  TABLE: 'table',
+  STATS: 'stats',
+};
+
 const SortType = {
   DATE_UP: 'date-up',
   PRICE_DOWN: 'price-down',

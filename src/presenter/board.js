@@ -151,5 +151,19 @@ export default class Board {
     this._renderSort();
     this._renderPoints(this._getPoints());
   }
+
+  show() {
+    document.querySelector('.trip-events').classList.remove('trip-events--hidden');
+  }
+
+  hide() {
+    document.querySelector('.trip-events').classList.add('trip-events--hidden');
+    this._pointNewPresenter.destroy();
+    Object
+      .values(this._pointPresenter)
+      .forEach((presenter) => presenter.resetView());
+    this._currentSortType = SortType.DATE_UP;
+    this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+  }
 }
 
