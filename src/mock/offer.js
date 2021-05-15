@@ -1,6 +1,6 @@
 import {getRandomInteger} from '../utils/common.js';
 
-const OFFERS = ['Choose meal', 'Upgrade to comfort class', 'Choose seats', 'Add luggage', 'Travel by train'];
+const OFFERS = ['Choose meal', 'Upgrade to comfort-class', 'Choose the radio station, music', 'Add luggage', 'Travel by train'];
 
 const generateOffersList = () => {
   const shuffledOffers = OFFERS.sort(() => Math.random() - 0.5);

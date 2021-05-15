@@ -53,7 +53,7 @@ const handleSiteMenuClick = (menuItem) => {
       statisticsComponent.hide();
       remove(statisticsComponent);
       siteMenuComponent.setMenuItem(menuItem);
-      filterPresenter._filterComponent.getElement().querySelectorAll('.trip-filters__filter-input').forEach((filter) => filter.disabled = false);
+      filterPresenter.init();
       newEventButton.disabled = false;
       break;
     case MenuItem.STATS:
@@ -62,7 +62,7 @@ const handleSiteMenuClick = (menuItem) => {
       render(statisticsContainer, statisticsComponent, RenderPosition.BEFOREEND);
       statisticsComponent.show();
       siteMenuComponent.setMenuItem(menuItem);
-      filterPresenter._filterComponent.getElement().querySelectorAll('.trip-filters__filter-input').forEach((filter) => filter.disabled = true);
+      filterPresenter.disable();
       newEventButton.disabled = true;
       break;
   }
