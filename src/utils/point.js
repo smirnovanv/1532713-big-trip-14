@@ -18,7 +18,7 @@ export const sortEventsByPrice = (pointA, pointB) => {
   return pointB.basePrice - pointA.basePrice;
 };
 
-const getDuration = (point) => {
+export const getDuration = (point) => {
   return dayjs(point.dateTo) - dayjs(point.dateFrom);
 };
 
@@ -70,4 +70,27 @@ export const isPastDate = (point) => {
   return dayjs(point.dateTo).isBefore(dayjs());
 };
 
-export {formatedFullDate, sortEventsByDate, formatMonthDayDate, formatDayDate, formatDateFrom, formatDateTo, getPossibleOffers};
+const getFormattedDuration = (timeInMs) => {
+  const days = Math.floor(timeInMs / 86400000);
+  const hours = Math.floor((timeInMs - days * 86400000) / 3600000);
+  const minutes = Math.floor((timeInMs - days * 86400000 - hours * 3600000) / 60000);
+
+  let formattedDays = days.toString();
+  if (formattedDays.length < 2) {formattedDays = '0' + formattedDays;}
+
+  let formattedHours = hours.toString();
+  if (formattedHours.length < 2) {formattedHours = '0' + formattedHours;}
+
+  let formattedMinutes = minutes.toString();
+  if (formattedMinutes.length < 2) {formattedMinutes = '0' + formattedMinutes;}
+
+  if (days > 0) {
+    return `${formattedDays}D ${formattedHours}H ${formattedMinutes}M`;
+  } else if (hours > 0) {
+    return `${formattedHours}H ${formattedMinutes}M`;
+  } else {
+    return `${formattedMinutes}M`;
+  }
+};
+
+export {getFormattedDuration, formatedFullDate, sortEventsByDate, formatMonthDayDate, formatDayDate, formatDateFrom, formatDateTo, getPossibleOffers};

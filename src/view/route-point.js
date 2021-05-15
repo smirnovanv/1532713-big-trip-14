@@ -1,29 +1,8 @@
 import AbstractView from './abstract.js';
-import {formatMonthDayDate, formatDateFrom, formatDateTo} from '../utils/point.js';
+import {getFormattedDuration, formatMonthDayDate, formatDateFrom, formatDateTo} from '../utils/point.js';
 
-const getDuration = (firstDate, secondDate) => {
-  const timeInMs = Date.parse(secondDate) - Date.parse(firstDate);
-  const days = Math.floor(timeInMs / 86400000);
-  const hours = Math.floor((timeInMs - days * 86400000) / 3600000);
-  const minutes = Math.floor((timeInMs - days * 86400000 - hours * 3600000) / 60000);
-
-  let formatedDays = days.toString();
-  if (formatedDays.length < 2) {formatedDays = '0' + formatedDays;}
-
-  let formatedHours = hours.toString();
-  if (formatedHours.length < 2) {formatedHours = '0' + formatedHours;}
-
-  let formatedMinutes = minutes.toString();
-  if (formatedMinutes.length < 2) {formatedMinutes = '0' + formatedMinutes;}
-
-  if (days > 0) {
-    return `${formatedDays}D ${formatedHours}H ${formatedMinutes}M`;
-  } else if (hours > 0) {
-    return `${formatedHours}H ${formatedMinutes}M`;
-  } else {
-    return `${formatedMinutes}M`;
-  }
-};
+const getDurationInMS = (firstDate, secondDate) => {
+  return Date.parse(secondDate) - Date.parse(firstDate);};
 
 const createOffersList = (chosenOffers) => {
   if (chosenOffers.length === 0) {
@@ -37,18 +16,10 @@ const createOffersList = (chosenOffers) => {
   }
 };
 
-/*
-const getFavouriteClass = (favouriteStatus) => {
-  if (favouriteStatus === true) {
-    return ' event__favorite-btn--active';
-  } else {
-    return '';
-  }
-};
-*/
-
 const createRoutePointTemplate = (point) => {
   const {type, destination, dateFrom, dateTo, basePrice, offers, isFavourite} = point;
+
+  const durationInMS = getDurationInMS(dateFrom, dateTo);
 
   const getFavouriteClass = isFavourite
     ? 'event__favorite-btn event__favorite-btn--active'
@@ -67,7 +38,7 @@ const createRoutePointTemplate = (point) => {
         &mdash;
         <time class="event__end-time" datetime="2019-03-19T19:00">${formatDateTo(dateFrom, dateTo)}</time>
       </p>
-      <p class="event__duration">${getDuration(dateFrom, dateTo)}</p>
+      <p class="event__duration">${getFormattedDuration(durationInMS)}</p>
     </div>
     <p class="event__price">
       &euro;&nbsp;<span class="event__price-value">${basePrice}</span>

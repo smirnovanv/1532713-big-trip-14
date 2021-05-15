@@ -30,6 +30,11 @@ const UpdateType = {
   MAJOR: 'MAJOR',
 };
 
+export const MenuItem = {
+  TABLE: 'table',
+  STATS: 'stats',
+};
+
 const SortType = {
   DATE_UP: 'date-up',
   PRICE_DOWN: 'price-down',
@@ -47,10 +52,10 @@ const possibleOffers = [
     type: 'taxi',
     offers: [
       {
-        title: 'Upgrade to a business class',
+        title: 'Upgrade to comfort-class',
         price: 120,
       }, {
-        title: 'Choose the radio station',
+        title: 'Choose the radio station, music',
         price: 60,
       },
     ]},
