@@ -2,7 +2,7 @@ import RoutePointView from '../view/route-point.js';
 import EditFormView from '../view/edit-form.js';
 import {render, RenderPosition, replace, remove} from '../utils/render.js';
 
-import {getPossibleOffers, isPriceSame, isDateSame, isDurationSame} from '../utils/point.js';
+import {isPriceSame, isDateSame, isDurationSame} from '../utils/point.js';
 import {UserAction, UpdateType} from '../const.js';
 
 const Mode = {
@@ -11,10 +11,12 @@ const Mode = {
 };
 
 export default class Point {
-  constructor (pointsListContainer, changeData, changeMode) {
+  constructor (pointsListContainer, changeData, changeMode, destinations, offers) {
     this._pointsListContainer = pointsListContainer;
     this._changeData = changeData;
     this._changeMode = changeMode;
+    this._destinations = destinations;
+    this._offers = offers;
 
     this._pointComponent = null;
     this._pointEditComponent = null;
@@ -35,7 +37,7 @@ export default class Point {
     const prevEditComponent = this._pointEditComponent;
 
     this._pointComponent = new RoutePointView(point);
-    this._pointEditComponent = new EditFormView(getPossibleOffers(this._point), point);
+    this._pointEditComponent = new EditFormView(this._offers, this._destinations, point);
 
     this._pointComponent.setEditClickHandler(this._handleEditClick);
     this._pointComponent.setFavouriteClickHandler(this._handleFavouriteClick);

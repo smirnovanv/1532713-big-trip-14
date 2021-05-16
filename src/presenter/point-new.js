@@ -4,7 +4,6 @@ import {remove, render, RenderPosition} from '../utils/render.js';
 import {UserAction, UpdateType} from '../const.js';
 import {getPossibleOffers} from '../utils/point.js';
 
-
 export default class PointNew {
   constructor(pointsListContainer, changeData) {
     this._pointsListContainer = pointsListContainer;
@@ -46,8 +45,6 @@ export default class PointNew {
     this._changeData(
       UserAction.ADD_POINT,
       UpdateType.MINOR,
-      // Пока у нас нет сервера, который бы после сохранения
-      // выдывал честный id задачи, нам нужно позаботиться об этом самим
       Object.assign(point, {id: nanoid()}),
     );
     this.destroy();
