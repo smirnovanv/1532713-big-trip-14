@@ -66,6 +66,7 @@ boardPresenter.init();
 
 newEventButton.disabled = true;
 
+/*
 api.getOffers()
   .then((offersData) => {
     offers.setOffers(offersData);
@@ -89,3 +90,26 @@ api.getOffers()
     siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
     newEventButton.disabled = false;
   });
+*/
+
+Promise.all([
+  api.getOffers()
+    .then((offersData) => {offers.setOffers(offersData);}),
+  api.getDestinations()
+    .then((destinationsPoints) => {destinations.setDestinations(destinationsPoints);}),
+  api.getPoints()
+    .then((points) => {
+      pointsModel.setPoints(UpdateType.INIT, points);
+      render(tripControlsNavigation, siteMenuComponent, RenderPosition.BEFOREEND);
+      render(tripMain, new RouteInfoAndCostView(pointsModel.getPoints()), RenderPosition.AFTERBEGIN);
+      siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
+      newEventButton.disabled = false;})])
+  .catch(() => {
+    pointsModel.setPoints(UpdateType.INIT, []);
+    render(tripControlsNavigation, siteMenuComponent, RenderPosition.BEFOREEND);
+    render(tripMain, new RouteInfoAndCostView(pointsModel.getPoints()), RenderPosition.AFTERBEGIN);
+    siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
+    newEventButton.disabled = false;
+  });
+
+//fetch(url1).then(function(response){ return response.json() })
