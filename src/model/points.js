@@ -88,7 +88,6 @@ export default class Points extends Observer {
       },
     );
 
-    // Ненужные ключи мы удаляем
     delete adaptedPoint.dateFrom;
     delete adaptedPoint.dateTo;
     delete adaptedPoint.isFavourite;

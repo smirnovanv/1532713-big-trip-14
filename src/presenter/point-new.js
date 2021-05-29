@@ -1,13 +1,13 @@
 import EditFormView from '../view/edit-form.js';
-import {nanoid} from 'nanoid';
 import {remove, render, RenderPosition} from '../utils/render.js';
 import {UserAction, UpdateType} from '../const.js';
-import {getPossibleOffers} from '../utils/point.js';
 
 export default class PointNew {
-  constructor(pointsListContainer, changeData) {
+  constructor(pointsListContainer, changeData, destinations, offers) {
     this._pointsListContainer = pointsListContainer;
     this._changeData = changeData;
+    this._destinations = destinations;
+    this._offers = offers;
 
     this._pointEditComponent = null;
 
@@ -21,7 +21,7 @@ export default class PointNew {
       return;
     }
 
-    this._pointEditComponent = new EditFormView(getPossibleOffers());
+    this._pointEditComponent = new EditFormView(this._offers, this._destinations);
     this._pointEditComponent.setFormSubmitHandler(this._handleFormSubmit);
     this._pointEditComponent.setDeleteClickHandler(this._handleDeleteClick);
 
@@ -41,13 +41,31 @@ export default class PointNew {
     document.removeEventListener('keydown', this._escKeyDownHandler);
   }
 
+  setSaving() {
+    this._pointEditComponent.updateData({
+      isDisabled: true,
+      isSaving: true,
+    });
+  }
+
+  setAborting() {
+    const resetFormState = () => {
+      this._pointEditComponent.updateData({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
+    this._pointEditComponent.shake(resetFormState);
+  }
+
   _handleFormSubmit(point) {
     this._changeData(
       UserAction.ADD_POINT,
       UpdateType.MINOR,
-      Object.assign(point, {id: nanoid()}),
+      point,
     );
-    this.destroy();
   }
 
   _handleDeleteClick() {

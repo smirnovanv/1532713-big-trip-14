@@ -38,7 +38,4 @@ export default class Menu extends AbstractView {
       }
     });
   }
-  //const item = this.getElement().querySelector(`[data-menu-button=${menuItem}]`);
-  //button.classList.toggle('trip-tabs__btn--active')
-
 }

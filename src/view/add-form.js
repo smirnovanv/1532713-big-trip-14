@@ -100,9 +100,6 @@ const createAddFormTemplate = () => {
       <button class="event__reset-btn" type="reset">Cancel</button>
     </header>
     <section class="event__details">
-
-
-
     </section>
   </form>
 </li>`;
