@@ -2,12 +2,15 @@ import SmartView from './smart.js';
 import {hideBlockIfEmpty} from '../utils/render.js';
 import {formatedFullDate} from '../utils/point.js';
 import {TYPES} from '../const.js';
-import {getPossibleOffers} from '../utils/point.js';
-import {destinationsData} from '../mock/event.js';
 import flatpickr from 'flatpickr';
 import {BLANK_POINT} from '../const.js';
 
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
+
+const getPossibleOffers = (possibleOffers, point = BLANK_POINT) => {
+  const currentType = point.type;
+  return possibleOffers.filter((offer) => offer.type === currentType)[0].offers;
+};
 
 const createPicturesList = (pictures) => {
   if (pictures.length === 0) {
@@ -18,44 +21,18 @@ const createPicturesList = (pictures) => {
   }
 };
 
-const createChosenOffersList = (chosenOffers) => {
-  if (chosenOffers.length === 0) {
-    return '';
-  } else {
-    const chosenOffersList = chosenOffers.map((offer) => `<div class="event__offer-selector">
-    <input class="event__offer-checkbox  visually-hidden" id="${offer.title.toLowerCase().split(' ').join('-')}" type="checkbox" name="${offer.title.toLowerCase().split(' ').join('-')}" data-offer="${offer.title.toLowerCase().split(' ').join('-')}" checked>
-    <label class="event__offer-label" for="${offer.title.toLowerCase().split(' ').join('-')}">
-      <span class="event__offer-title">${offer.title}</span>
-      &plus;&euro;&nbsp;
-      <span class="event__offer-price">${offer.price}</span>
-    </label>
-  </div>`);
-    return chosenOffersList.join('');
-  }
+const createOffersList = (chosenOffers, allOffers) => {
+  const offers = allOffers.map((offer) => `<div class="event__offer-selector">
+  <input class="event__offer-checkbox  visually-hidden" id="${offer.title.toLowerCase().split(' ').join('-')}" type="checkbox" name="${offer.title.toLowerCase().split(' ').join('-')}" data-offer="${offer.title.toLowerCase().split(' ').join('-')}"
+  ${chosenOffers.some((chosenOffer) => chosenOffer.title === offer.title) ? ' checked' : ''}>
+  <label class="event__offer-label" for="${offer.title.toLowerCase().split(' ').join('-')}">
+    <span class="event__offer-title">${offer.title}</span>
+    &plus;&euro;&nbsp;
+    <span class="event__offer-price">${offer.price}</span>
+  </label>
+</div>`);
+  return offers.join('');
 };
-
-const createExtraOffersList = (chosenOffers, allOffers) => {
-  const currentOptions = new Set();
-  chosenOffers.forEach((offer) => {
-    currentOptions.add(offer.title);
-  });
-  const extraOffersList = [];
-  allOffers.forEach((option) => {
-    if (!currentOptions.has(option.title)) {
-      extraOffersList.push(`<div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="${option.title.toLowerCase().split(' ').join('-')}" type="checkbox" name="${option.title.toLowerCase().split(' ').join('-')}" data-offer="${option.title.toLowerCase().split(' ').join('-')}">
-      <label class="event__offer-label" for="${option.title.toLowerCase().split(' ').join('-')}">
-        <span class="event__offer-title">${option.title}</span>
-        &plus;&euro;&nbsp;
-        <span class="event__offer-price">${option.price}</span>
-      </label>
-    </div>`);
-    }
-  });
-  return extraOffersList.join('');
-};
-//сокращу две функции отрисовки офферов до одной, когде придут реальные данные, пока у меня моки не совпадают. буду отрисовывать все возможные опции,
-//а если опция совпадает с выбранной, то поставлю checked
 
 const makeFirstLetterUpperCase = (str) => {
   const newString = str[0].toUpperCase() + str.slice(1);
@@ -70,12 +47,12 @@ const createEditFormTypeTemplate = (currentType) => {
 </div>`).join('');
 };
 
-const createEditFormDestinationsTemplate = (point) => {
+const createEditFormDestinationsTemplate = (destinationsData, point) => {
   return destinationsData.map((destination) => `<option value="${destination.name}"${destination.name === point.destination.name ? ' selected' : ''}></option>`).join('');
 };
 
-const hideOffersSection = (point) => {
-  if (getPossibleOffers(point).length === 0) {
+const hideOffersSection = (offers, point) => {
+  if (getPossibleOffers(offers, point).length === 0) {
     return ' visually-hidden';}
   return '';
 };
@@ -91,7 +68,7 @@ const createEditButtonsTemplate = (point) => {
   }
 };
 
-const createEditFormTemplate = (point = BLANK_POINT) => {
+const createEditFormTemplate = (point = BLANK_POINT, destinations, allOffers) => {
   const {type, destination, dateFrom, dateTo, basePrice, offers} = point;
 
   const typesTemplate = createEditFormTypeTemplate(type);
@@ -120,7 +97,7 @@ const createEditFormTemplate = (point = BLANK_POINT) => {
         </label>
         <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.name}" list="destination-list-1" required>
         <datalist id="destination-list-1">
-        ${createEditFormDestinationsTemplate(point)}
+        ${createEditFormDestinationsTemplate(destinations, point)}
         </datalist>
       </div>
 
@@ -144,11 +121,10 @@ const createEditFormTemplate = (point = BLANK_POINT) => {
       ${createEditButtonsTemplate(point)}
     </header>
     <section class="event__details">
-      <section class="event__section  event__section--offers${hideOffersSection(point)}">
+      <section class="event__section  event__section--offers${hideOffersSection(allOffers, point)}">
         <h3 class="event__section-title  event__section-title--offers">Offers</h3>
         <div class="event__available-offers">
-        ${createChosenOffersList(offers)}
-        ${createExtraOffersList(offers, getPossibleOffers(point))}
+        ${createOffersList(offers, getPossibleOffers(allOffers, point))}
         </div>
       </section>
       <section class="event__section  event__section--destination">
@@ -166,13 +142,14 @@ const createEditFormTemplate = (point = BLANK_POINT) => {
 };
 
 export default class EditForm extends SmartView {
-  constructor (typeOffers, point = BLANK_POINT) {
+  constructor (offers, destinations, point = BLANK_POINT) {
     super();
     this._state = EditForm.parsePointToState(point);
     this._datepickerFrom = null;
     this._datepickerTo = null;
+    this._destinations = destinations._destinations;
+    this._offers = offers._offers;
 
-    this._typeOffers = typeOffers;
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._formDeleteClickHandler = this._formDeleteClickHandler.bind(this);
     this._priceInputHandler = this._priceInputHandler.bind(this);
@@ -207,7 +184,7 @@ export default class EditForm extends SmartView {
   }
 
   getTemplate () {
-    return createEditFormTemplate(this._state, this._typeOffers);
+    return createEditFormTemplate(this._state, this._destinations, this._offers);
   }
 
   restoreHandlers () {
@@ -296,7 +273,7 @@ export default class EditForm extends SmartView {
         offers: this._state.offers.slice().filter((offer) => offer.title.toLowerCase().split(' ').join('-') !== evt.target.dataset.offer),
       });
     } else {
-      const newCheckedOffer = getPossibleOffers(this._state).slice().filter((offer) => offer.title.toLowerCase().split(' ').join('-') === evt.target.dataset.offer)[0];
+      const newCheckedOffer = getPossibleOffers(this._offers, this._state).slice().filter((offer) => offer.title.toLowerCase().split(' ').join('-') === evt.target.dataset.offer)[0];
       this.updateData({
         offers: this._state.offers.slice().concat(newCheckedOffer),
       });
@@ -305,9 +282,9 @@ export default class EditForm extends SmartView {
 
   _destinationInputHandler (evt) {
     evt.preventDefault();
-    if (destinationsData.some((destination) => destination.name === evt.target.value)) {
+    if (this._destinations.some((destination) => destination.name === evt.target.value)) {
       this.updateData({
-        destination: {name: evt.target.value, description: destinationsData.filter((destination) => destination.name === evt.target.value)[0].description, pictures: destinationsData.filter((destination) => destination.name === evt.target.value)[0].pictures},
+        destination: {name: evt.target.value, description: this._destinations.filter((destination) => destination.name === evt.target.value)[0].description, pictures: this._destinations.filter((destination) => destination.name === evt.target.value)[0].pictures},
       });
     }
   }
