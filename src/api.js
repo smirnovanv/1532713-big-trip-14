@@ -41,7 +41,7 @@ export default class Api {
       body: JSON.stringify(PointsModel.adaptToServer(point)),
       headers: new Headers({'Content-Type': 'application/json'}),
     })
-      //.then(Api.toJSON)
+      .then(Api.toJSON)
       .then(PointsModel.adaptToClient);
   }
 
