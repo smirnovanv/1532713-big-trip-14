@@ -75,7 +75,9 @@ export default class Board {
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
       case UserAction.UPDATE_POINT:
-        this._pointPresenter[update.id].setViewState(PointPresenterViewState.SAVING);
+        if (update.isOnlyStar) {update.isOnlyStar = false;} else {
+          this._pointPresenter[update.id].setViewState(PointPresenterViewState.SAVING);
+        }
         this._api.updatePoint(update).then((response) => {
           this._pointsModel.updatePoint(updateType, response);
         }).catch(() => {

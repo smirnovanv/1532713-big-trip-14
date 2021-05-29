@@ -139,6 +139,7 @@ export default class Point {
         this._point,
         {
           isFavourite: !this._point.isFavourite,
+          isOnlyStar: true,
         },
       ),
     );
