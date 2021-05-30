@@ -1,4 +1,4 @@
-import TripEventsListView from '../view/events-list.js';
+import TripEventsListView from '../view/trip-events-list.js';
 import EmptyList from '../view/empty-list.js';
 import SortingView from '../view/sorting.js';
 import {render, RenderPosition, remove} from '../utils/render.js';
