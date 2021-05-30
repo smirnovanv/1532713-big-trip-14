@@ -11,7 +11,7 @@ import LoadingView from '../view/loading.js';
 
 
 export default class Board {
-  constructor (boardContainer, pointsModel, filterModel, api, destinations, offers) {
+  constructor(boardContainer, pointsModel, filterModel, api, destinations, offers) {
     this._pointsModel = pointsModel;
     this._filterModel = filterModel;
     this._boardContainer = boardContainer;
@@ -49,7 +49,7 @@ export default class Board {
     this._pointNewPresenter.init();
   }
 
-  _getPoints () {
+  _getPoints() {
     const filterType = this._filterModel.getFilter();
     const points = this._pointsModel.getPoints();
     const filteredPoints = filter[filterType](points);
@@ -134,19 +134,19 @@ export default class Board {
     this._renderBoard();
   }
 
-  _renderSort () {
+  _renderSort() {
     this._sortingComponent = new SortingView(this._currentSortType);
     this._sortingComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
     render(this._boardContainer, this._sortingComponent, RenderPosition.BEFOREEND);
   }
 
-  _renderPoint (point) {
+  _renderPoint(point) {
     const pointPresenter = new PointPresenter(this._tripEventsListComponent,  this._handleViewAction,  this._handleModeChange, this._destinations, this._offers);
     pointPresenter.init(point);
     this._pointPresenter[point.id] = pointPresenter;
   }
 
-  _renderPoints (points) {
+  _renderPoints(points) {
     render(this._boardContainer, this._tripEventsListComponent, RenderPosition.BEFOREEND);
     points.forEach((point) => this._renderPoint(point));
   }
@@ -155,7 +155,7 @@ export default class Board {
     render(this._boardContainer, this._loadingComponent, RenderPosition.BEFOREEND);
   }
 
-  _renderNoPoints () {
+  _renderNoPoints() {
     render(this._boardContainer, this._emptyListComponent, RenderPosition.BEFOREEND);
   }
 
@@ -176,7 +176,7 @@ export default class Board {
     }
   }
 
-  _renderBoard () {
+  _renderBoard() {
     if (this._isLoading) {
       this._renderLoading();
       return;

@@ -322,7 +322,7 @@ export default class Statistics extends SmartView {
     timeCtx.height = BAR_HEIGHT * 5;
   }
 
-  restoreHandlers () {
+  restoreHandlers() {
     this._setCharts();
   }
 

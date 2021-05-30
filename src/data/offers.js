@@ -1,5 +1,5 @@
 export default class Offers {
-  constructor () {
+  constructor() {
     this._offers = [];
   }
 

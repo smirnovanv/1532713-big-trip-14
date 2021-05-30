@@ -51,7 +51,7 @@ export default class Sorting extends AbstractView {
     this.getElement().addEventListener('click', this._sortTypeChangeHandler);
   }
 
-  getTemplate () {
+  getTemplate() {
     return createSortingTemplate(this._currentSortType);
   }
 }

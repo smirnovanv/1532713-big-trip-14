@@ -34,7 +34,7 @@ export default class Filter {
     remove(prevFilterComponent);
   }
 
-  disable () {
+  disable() {
     this._filterComponent._disableAll();
   }
 

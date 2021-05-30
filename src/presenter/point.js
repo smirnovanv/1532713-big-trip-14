@@ -35,7 +35,7 @@ export default class Point {
     this._handleExitClick = this._handleExitClick.bind(this);
   }
 
-  init (point) {
+  init(point) {
     this._point = point;
 
     const prevPointComponent = this._pointComponent;
@@ -68,7 +68,7 @@ export default class Point {
     remove(prevEditComponent);
   }
 
-  destroy () {
+  destroy() {
     remove(this._pointComponent);
     remove(this._pointEditComponent);
     document.removeEventListener('keydown', this._escKeyDownHandler);
@@ -109,20 +109,20 @@ export default class Point {
     }
   }
 
-  _replacePointByForm () {
+  _replacePointByForm() {
     replace(this._pointEditComponent, this._pointComponent);
     document.removeEventListener('keydown', this._escKeyDownHandler);
     this._changeMode();
     this._mode = Mode.EDITING;
   }
 
-  _replaceFormByPoint () {
+  _replaceFormByPoint() {
     replace(this._pointComponent, this._pointEditComponent);
     document.removeEventListener('keydown', this._escKeyDownHandler);
     this._mode = Mode.DEFAULT;
   }
 
-  _escKeyDownHandler (evt) {
+  _escKeyDownHandler(evt) {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
       this._pointEditComponent.reset(this._point);
@@ -130,7 +130,7 @@ export default class Point {
     }
   }
 
-  _handleFavouriteClick () {
+  _handleFavouriteClick() {
     this._changeData(
       UserAction.UPDATE_POINT,
       UpdateType.MINOR,
@@ -145,12 +145,12 @@ export default class Point {
     );
   }
 
-  _handleEditClick () {
+  _handleEditClick() {
     this._replacePointByForm();
     document.addEventListener('keydown', this._escKeyDownHandler);
   }
 
-  _handleFormSubmit (update) {
+  _handleFormSubmit(update) {
     const isMinorUpdate =
       !isPriceSame(this._point.basePrice, update.basePrice) ||
       !isDurationSame(this._point, update) ||
@@ -171,7 +171,7 @@ export default class Point {
     );
   }
 
-  _handleExitClick () {
+  _handleExitClick() {
     this._pointEditComponent.reset(this._point);
     this._replaceFormByPoint();
   }

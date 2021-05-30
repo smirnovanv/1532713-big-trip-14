@@ -22,7 +22,7 @@ const createFiltersTemplate = (filterItems, currentFilterType) => {
 };
 
 export default class Filters extends AbstractView {
-  constructor (filters, currentFilterType) {
+  constructor(filters, currentFilterType) {
     super();
     this._filters = filters;
     this._currentFilter = currentFilterType;
@@ -30,11 +30,11 @@ export default class Filters extends AbstractView {
     this._filterTypeChangeHandler = this._filterTypeChangeHandler.bind(this);
   }
 
-  getTemplate () {
+  getTemplate() {
     return createFiltersTemplate(this._filters, this._currentFilter);
   }
 
-  _disableAll () {
+  _disableAll() {
     this.getElement().querySelectorAll('.trip-filters__filter-input').forEach((filter) => filter.disabled = true);
   }
 

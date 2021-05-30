@@ -6,16 +6,16 @@ const sortEventsByDate = (pointA, pointB) => {
   return pointA.dateFrom - pointB.dateFrom;
 };
 
-export const sortEventsByPrice = (pointA, pointB) => {
+const sortEventsByPrice = (pointA, pointB) => {
 
   return pointB.basePrice - pointA.basePrice;
 };
 
-export const getDuration = (point) => {
+const getDuration = (point) => {
   return dayjs(point.dateTo) - dayjs(point.dateFrom);
 };
 
-export const sortEventsByDuration = (pointA, pointB) => {
+const sortEventsByDuration = (pointA, pointB) => {
   return getDuration(pointB) - getDuration(pointA);
 };
 
@@ -43,23 +43,23 @@ const formatDateTo = (firstDate, secondDate) => {
   return dayjs(secondDate).format(getFormat(firstDate, secondDate));
 };
 
-export const isDateSame = (dateA, dateB) => {
+const isDateSame = (dateA, dateB) => {
   return dayjs(dateA).isSame(dateB);
 };
 
-export const isDurationSame = (pointA, pointB) => {
+const isDurationSame = (pointA, pointB) => {
   return getDuration(pointA) === getDuration(pointB);
 };
 
-export const isPriceSame = (priceA, priceB) => {
+const isPriceSame = (priceA, priceB) => {
   return priceA === priceB;
 };
 
-export const isFutureDate = (point) => {
+const isFutureDate = (point) => {
   return dayjs(point.dateFrom).isAfter(dayjs()) || dayjs(point.dateFrom).isSame(dayjs());
 };
 
-export const isPastDate = (point) => {
+const isPastDate = (point) => {
   return dayjs(point.dateTo).isBefore(dayjs());
 };
 
@@ -86,4 +86,4 @@ const getFormattedDuration = (timeInMs) => {
   }
 };
 
-export {getFormattedDuration, formatedFullDate, sortEventsByDate, formatMonthDayDate, formatDayDate, formatDateFrom, formatDateTo};
+export {isPastDate, isFutureDate, isPriceSame, isDurationSame, isDateSame, sortEventsByDuration, getDuration, sortEventsByPrice, getFormattedDuration, formatedFullDate, sortEventsByDate, formatMonthDayDate, formatDayDate, formatDateFrom, formatDateTo};

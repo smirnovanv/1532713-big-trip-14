@@ -141,7 +141,7 @@ const createEditFormTemplate = (point = BLANK_POINT, destinations, allOffers) =>
 };
 
 export default class EditForm extends SmartView {
-  constructor (offers, destinations, point = BLANK_POINT) {
+  constructor(offers, destinations, point = BLANK_POINT) {
     super();
     this._state = EditForm.parsePointToState(point);
     this._datepickerFrom = null;
@@ -178,15 +178,15 @@ export default class EditForm extends SmartView {
     }
   }
 
-  reset (point) {
+  reset(point) {
     this.updateData(EditForm.parsePointToState(point));
   }
 
-  getTemplate () {
+  getTemplate() {
     return createEditFormTemplate(this._state, this._destinations, this._offers);
   }
 
-  restoreHandlers () {
+  restoreHandlers() {
     this._setInnerHandlers();
     this._setDatepickerFrom();
     this._setDatepickerTo();
@@ -245,28 +245,28 @@ export default class EditForm extends SmartView {
     });
   }
 
-  _setInnerHandlers () {
+  _setInnerHandlers() {
     this.getElement().querySelector('.event__input--price').addEventListener('input', this._priceInputHandler);
     this.getElement().querySelector('.event__type-group').addEventListener('change', this._typeChangeHandler);
     this.getElement().querySelector('.event__input--destination').addEventListener('input', this._destinationInputHandler);
     this.getElement().querySelector('.event__available-offers').addEventListener('change', this._offersChangeHandler);
   }
 
-  _priceInputHandler (evt) {
+  _priceInputHandler(evt) {
     evt.preventDefault();
     this.updateData({
       basePrice: evt.target.value,
     }, true);
   }
 
-  _typeChangeHandler (evt) {
+  _typeChangeHandler(evt) {
     this.updateData({
       type: evt.target.value,
       offers: [],
     });
   }
 
-  _offersChangeHandler (evt) {
+  _offersChangeHandler(evt) {
     if (this._state.offers.some((offer) => offer.title.toLowerCase().split(' ').join('-') === evt.target.dataset.offer)) {
       this.updateData({
         offers: this._state.offers.slice().filter((offer) => offer.title.toLowerCase().split(' ').join('-') !== evt.target.dataset.offer),
@@ -279,7 +279,7 @@ export default class EditForm extends SmartView {
     }
   }
 
-  _destinationInputHandler (evt) {
+  _destinationInputHandler(evt) {
     evt.preventDefault();
     if (this._destinations.some((destination) => destination.name === evt.target.value)) {
       this.updateData({
@@ -288,26 +288,26 @@ export default class EditForm extends SmartView {
     }
   }
 
-  _formSubmitHandler (evt) {
+  _formSubmitHandler(evt) {
     evt.preventDefault();
     this._callback.formSubmit(EditForm.parseStateToPoint(this._state));
   }
 
-  setFormSubmitHandler (callback) {
+  setFormSubmitHandler(callback) {
     this._callback.formSubmit = callback;
     this.getElement().querySelector('form').addEventListener('submit', this._formSubmitHandler);
   }
 
-  _clickHandler () {
+  _clickHandler() {
     this._callback.click();
   }
 
-  setEditClickHandler (callback) {
+  setEditClickHandler(callback) {
     this._callback.click = callback;
     this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._clickHandler);
   }
 
-  setExitClickHandler (callback) {
+  setExitClickHandler(callback) {
     this._callback.click = callback;
     this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._clickHandler);
   }
@@ -322,7 +322,7 @@ export default class EditForm extends SmartView {
     this.getElement().querySelector('.event__reset-btn').addEventListener('click', this._formDeleteClickHandler);
   }
 
-  static parsePointToState (point) {
+  static parsePointToState(point) {
     return Object.assign(
       {},
       point,
@@ -335,7 +335,7 @@ export default class EditForm extends SmartView {
     );
   }
 
-  static parseStateToPoint (state) {
+  static parseStateToPoint(state) {
     state = Object.assign({}, state);
 
     delete state.isPointNew;

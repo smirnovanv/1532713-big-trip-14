@@ -3,7 +3,7 @@ import {nanoid} from 'nanoid';
 
 const TYPES = ['taxi', 'bus', 'train', 'ship', 'transport', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
 
-export const BLANK_POINT = {
+const BLANK_POINT = {
   id: nanoid(),
   type: 'taxi',
   destination: {
@@ -31,7 +31,7 @@ const UpdateType = {
   INIT: 'INIT',
 };
 
-export const MenuItem = {
+const MenuItem = {
   TABLE: 'table',
   STATS: 'stats',
 };
@@ -42,12 +42,12 @@ const SortType = {
   DURATION_DOWN: 'duration-down',
 };
 
-export const FilterType = {
+const FilterType = {
   EVERYTHING: 'everything',
   FUTURE: 'future',
   PAST: 'past',
 };
 
-export {SortType, TYPES, UserAction, UpdateType};
+export {FilterType, MenuItem, BLANK_POINT, SortType, TYPES, UserAction, UpdateType};
 
 
