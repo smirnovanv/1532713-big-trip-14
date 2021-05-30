@@ -7,6 +7,12 @@ import {makeItemsUnique} from '../utils/common.js';
 
 const BAR_HEIGHT = 55;
 
+const ChartLabels = {
+  MONEY: 'MONEY',
+  TYPE: 'TYPE',
+  TIME: 'TIME-SPEND',
+};
+
 const getTypePrice = (points, type) => {
   const reducer = (initialValue, price) => Number(initialValue) + Number(price);
   return points.filter((point) => point.type === type).map((point) => point.basePrice).reduce(reducer);
@@ -47,30 +53,14 @@ const getChartData = (points, types) => {
   return chartData;
 };
 
-const getMoneyChartData = (points, types) => {
-  return getChartData(points, types).sort(sortByPrice);
-};
-
-const getTypesChartData = (points, types) => {
-  return getChartData(points, types).sort(sortByCount);
-};
-
-const getTimeChartData = (points, types) => {
-  return getChartData(points, types).sort(sortByDuration);
-};
-
-const renderMoneyChart = (moneyCtx, points, format) => {
-  const uniqueTypes = makeItemsUnique(points.map((point) => point.type));
-  const sortedTypes = getMoneyChartData(points,uniqueTypes).map((type) => type.name.toUpperCase());
-  const sortedPrices = getMoneyChartData(points,uniqueTypes).map((type) => type.price);
-
-  return new Chart(moneyCtx, {
+const renderChart = (chartType, sortedTypes, sortedData, label, format) => {
+  return new Chart(chartType, {
     plugins: [ChartDataLabels],
     type: 'horizontalBar',
     data: {
       labels: sortedTypes,
       datasets: [{
-        data: sortedPrices,
+        data: sortedData,
         backgroundColor: '#ffffff',
         hoverBackgroundColor: '#ffffff',
         anchor: 'start',
@@ -90,149 +80,7 @@ const renderMoneyChart = (moneyCtx, points, format) => {
       },
       title: {
         display: true,
-        text: 'MONEY',
-        fontColor: '#000000',
-        fontSize: 23,
-        position: 'left',
-      },
-      scales: {
-        yAxes: [{
-          ticks: {
-            fontColor: '#000000',
-            padding: 5,
-            fontSize: 13,
-          },
-          gridLines: {
-            display: false,
-            drawBorder: false,
-          },
-          barThickness: 44,
-        }],
-        xAxes: [{
-          ticks: {
-            display: false,
-            beginAtZero: true,
-          },
-          gridLines: {
-            display: false,
-            drawBorder: false,
-          },
-          minBarLength: 50,
-        }],
-      },
-      legend: {
-        display: false,
-      },
-      tooltips: {
-        enabled: false,
-      },
-    },
-  });
-};
-
-const renderTypeChart = (typeCtx, points, format) => {
-  const uniqueTypes = makeItemsUnique(points.map((point) => point.type));
-  const sortedTypes = getTypesChartData(points, uniqueTypes).map((type) => type.name.toUpperCase());
-  const sortedCounts = getTypesChartData(points, uniqueTypes).map((type) => type.count);
-
-  return new Chart(typeCtx, {
-    plugins: [ChartDataLabels],
-    type: 'horizontalBar',
-    data: {
-      labels: sortedTypes,
-      datasets: [{
-        data: sortedCounts,
-        backgroundColor: '#ffffff',
-        hoverBackgroundColor: '#ffffff',
-        anchor: 'start',
-      }],
-    },
-    options: {
-      plugins: {
-        datalabels: {
-          font: {
-            size: 13,
-          },
-          color: '#000000',
-          anchor: 'end',
-          align: 'start',
-          formatter: format,
-        },
-      },
-      title: {
-        display: true,
-        text: 'TYPE',
-        fontColor: '#000000',
-        fontSize: 23,
-        position: 'left',
-      },
-      scales: {
-        yAxes: [{
-          ticks: {
-            fontColor: '#000000',
-            padding: 5,
-            fontSize: 13,
-          },
-          gridLines: {
-            display: false,
-            drawBorder: false,
-          },
-          barThickness: 44,
-        }],
-        xAxes: [{
-          ticks: {
-            display: false,
-            beginAtZero: true,
-          },
-          gridLines: {
-            display: false,
-            drawBorder: false,
-          },
-          minBarLength: 50,
-        }],
-      },
-      legend: {
-        display: false,
-      },
-      tooltips: {
-        enabled: false,
-      },
-    },
-  });
-};
-
-const renderTimeChart = (timeCtx, points, format) => {
-  const uniqueTypes = makeItemsUnique(points.map((point) => point.type));
-  const sortedTypes = getTimeChartData(points, uniqueTypes).map((type) => type.name.toUpperCase());
-  const sortedDuration = getTimeChartData(points, uniqueTypes).map((type) => type.time);
-
-  return new Chart(timeCtx, {
-    plugins: [ChartDataLabels],
-    type: 'horizontalBar',
-    data: {
-      labels: sortedTypes,
-      datasets: [{
-        data: sortedDuration,
-        backgroundColor: '#ffffff',
-        hoverBackgroundColor: '#ffffff',
-        anchor: 'start',
-      }],
-    },
-    options: {
-      plugins: {
-        datalabels: {
-          font: {
-            size: 13,
-          },
-          color: '#000000',
-          anchor: 'end',
-          align: 'start',
-          formatter: format,
-        },
-      },
-      title: {
-        display: true,
-        text: 'TIME-SPEND',
+        text: label,
         fontColor: '#000000',
         fontSize: 23,
         position: 'left',
@@ -313,9 +161,22 @@ export default class Statistics extends SmartView {
     const typeCtx = this.getElement().querySelector('.statistics__chart--transport');
     const timeCtx = this.getElement().querySelector('.statistics__chart--time');
 
-    this._moneyChart = renderMoneyChart(moneyCtx, this._data, moneyFormat);
-    this._typeChart = renderTypeChart(typeCtx, this._data, typeFormat);
-    this._timeChart = renderTimeChart(timeCtx, this._data, timeFormat);
+    const uniqueTypes = makeItemsUnique(this._data.map((point) => point.type));
+    const chartData = getChartData(this._data, uniqueTypes);
+    const chartDataByPrice = chartData.slice().sort(sortByPrice);
+    const chartDataByCount = chartData.slice().sort(sortByCount);
+    const chartDataByDuration = chartData.slice().sort(sortByDuration);
+
+    const typesByPrice = chartDataByPrice.map((type) => type.name.toUpperCase());
+    const sortedPrices = chartDataByPrice.map((type) => type.price);
+    const typesByCounts = chartDataByCount.map((type) => type.name.toUpperCase());
+    const sortedCounts = chartDataByCount.map((type) => type.count);
+    const typesByDuration = chartDataByDuration.map((type) => type.name.toUpperCase());
+    const sortedDuration = chartDataByDuration.map((type) => type.time);
+
+    this._moneyChart = renderChart(moneyCtx, typesByPrice, sortedPrices, ChartLabels.MONEY, moneyFormat);
+    this._typeChart = renderChart(typeCtx, typesByCounts, sortedCounts, ChartLabels.TYPE, typeFormat);
+    this._timeChart = renderChart(timeCtx, typesByDuration, sortedDuration, ChartLabels.TIME, timeFormat);
 
     moneyCtx.height = BAR_HEIGHT * 5;
     typeCtx.height = BAR_HEIGHT * 5;

@@ -1,6 +1,6 @@
 import SmartView from './smart.js';
 import {hideBlockIfEmpty} from '../utils/render.js';
-import {formatedFullDate} from '../utils/point.js';
+import {formatFullDate} from '../utils/point.js';
 import {TYPES} from '../const.js';
 import flatpickr from 'flatpickr';
 import {BLANK_POINT} from '../const.js';
@@ -103,10 +103,10 @@ const createEditFormTemplate = (point = BLANK_POINT, destinations, allOffers) =>
 
       <div class="event__field-group  event__field-group--time">
         <label class="visually-hidden" for="event-start-time-1">From</label>
-        <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${formatedFullDate(dateFrom)}${isDisabled ? ' disabled' : ''}">
+        <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${formatFullDate(dateFrom)}${isDisabled ? ' disabled' : ''}">
         &mdash;
         <label class="visually-hidden" for="event-end-time-1">To</label>
-        <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${formatedFullDate(dateTo)}${isDisabled ? ' disabled' : ''}">
+        <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${formatFullDate(dateTo)}${isDisabled ? ' disabled' : ''}">
       </div>
 
       <div class="event__field-group  event__field-group--price">

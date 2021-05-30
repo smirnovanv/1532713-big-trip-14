@@ -1,6 +1,12 @@
 import dayjs from 'dayjs';
 
-const formatedFullDate = (date) => {return dayjs(date).format('D/MM/YY HH:mm');};
+const MillisecondsData = {
+  MILLISECONDS_IN_DAY: 86400000,
+  MILLISECONDS_IN_HOUR: 3600000,
+  MILLISECONDS_IN_MINUTE: 60000,
+};
+
+const formatFullDate = (date) => {return dayjs(date).format('D/MM/YY HH:mm');};
 
 const sortEventsByDate = (pointA, pointB) => {
   return pointA.dateFrom - pointB.dateFrom;
@@ -23,12 +29,8 @@ const formatMonthDayDate = (date) => {
   return dayjs(date).format('MMM D');
 };
 
-const formatDayDate = (date) => {
-  return dayjs(date).format('D');
-};
-
 const getFormat = (firstDate, secondDate) => {
-  if (Date.parse(secondDate) - Date.parse(firstDate) > 86399999) {
+  if (Date.parse(secondDate) - Date.parse(firstDate) >= MillisecondsData.MILLISECONDS_IN_DAY) {
     return 'MM/D HH:mm';
   } else {
     return 'HH:mm';
@@ -63,10 +65,14 @@ const isPastDate = (point) => {
   return dayjs(point.dateTo).isBefore(dayjs());
 };
 
+const isFutureAndPastDate = (point) => {
+  return dayjs(point.dateFrom).isBefore(dayjs()) && dayjs(point.dateTo).isAfter(dayjs());
+};
+
 const getFormattedDuration = (timeInMs) => {
-  const days = Math.floor(timeInMs / 86400000);
-  const hours = Math.floor((timeInMs - days * 86400000) / 3600000);
-  const minutes = Math.floor((timeInMs - days * 86400000 - hours * 3600000) / 60000);
+  const days = Math.floor(timeInMs / MillisecondsData.MILLISECONDS_IN_DAY);
+  const hours = Math.floor((timeInMs - days * MillisecondsData.MILLISECONDS_IN_DAY) / MillisecondsData.MILLISECONDS_IN_HOUR);
+  const minutes = Math.floor((timeInMs - days * MillisecondsData.MILLISECONDS_IN_DAY - hours * MillisecondsData.MILLISECONDS_IN_HOUR) / MillisecondsData.MILLISECONDS_IN_MINUTE);
 
   let formattedDays = days.toString();
   if (formattedDays.length < 2) {formattedDays = '0' + formattedDays;}
@@ -86,4 +92,4 @@ const getFormattedDuration = (timeInMs) => {
   }
 };
 
-export {isPastDate, isFutureDate, isPriceSame, isDurationSame, isDateSame, sortEventsByDuration, getDuration, sortEventsByPrice, getFormattedDuration, formatedFullDate, sortEventsByDate, formatMonthDayDate, formatDayDate, formatDateFrom, formatDateTo};
+export {isFutureAndPastDate, isPastDate, isFutureDate, isPriceSame, isDurationSame, isDateSame, sortEventsByDuration, getDuration, sortEventsByPrice, getFormattedDuration, formatFullDate, sortEventsByDate, formatMonthDayDate, formatDateFrom, formatDateTo};

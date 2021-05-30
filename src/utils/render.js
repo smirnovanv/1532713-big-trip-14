@@ -61,8 +61,8 @@ const remove = (component) => {
   component.removeElement();
 };
 
-const hideBlockIfEmpty = (array) => {
-  if (array.length === 0) {
+const hideBlockIfEmpty = (data) => {
+  if (data.length === 0) {
     return ' visually-hidden';
   } else {return '';}
 };

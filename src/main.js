@@ -1,5 +1,4 @@
 import MenuView from './view/menu.js';
-import RouteInfoAndCostView from './view/route-info-and-cost.js';
 import {render, RenderPosition, remove} from './utils/render.js';
 import BoardPresenter from './presenter/board.js';
 import PointsModel from './model/points.js';
@@ -14,7 +13,6 @@ import Offers from './data/offers.js';
 const AUTHORIZATION = 'Basic myproject560420';
 const END_POINT = 'https://14.ecmascript.pages.academy/big-trip';
 
-const tripMain = document.querySelector('.trip-main');
 const tripControlsNavigation = document.querySelector('.trip-controls__navigation');
 const tripControlsFilters = document.querySelector('.trip-controls__filters');
 const tripEvents = document.querySelector('.trip-events');
@@ -71,7 +69,6 @@ Promise.all([api.getOffers(), api.getDestinations(), api.getPoints()]).then(([of
   destinations.setDestinations(destinationPoints);
   pointsModel.setPoints(UpdateType.INIT, points);
   render(tripControlsNavigation, siteMenuComponent, RenderPosition.BEFOREEND);
-  render(tripMain, new RouteInfoAndCostView(pointsModel.getPoints()), RenderPosition.AFTERBEGIN);
   siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
   newEventButton.disabled = false;
 });
