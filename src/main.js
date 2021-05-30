@@ -75,4 +75,3 @@ Promise.all([api.getOffers(), api.getDestinations(), api.getPoints()]).then(([of
   siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
   newEventButton.disabled = false;
 });
-

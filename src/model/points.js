@@ -32,7 +32,7 @@ export default class Points extends Observer {
     this._notify(updateType, update);
   }
 
-  addPoint (updateType, update) {
+  addPoint(updateType, update) {
     this._points = [
       update,
       ...this._points,
@@ -41,7 +41,7 @@ export default class Points extends Observer {
     this._notify(updateType, update);
   }
 
-  deletePoint (updateType, update) {
+  deletePoint(updateType, update) {
     const index = this._points.findIndex((point) => point.id === update.id);
 
     if (index === -1) {
@@ -88,7 +88,6 @@ export default class Points extends Observer {
       },
     );
 
-    // Ненужные ключи мы удаляем
     delete adaptedPoint.dateFrom;
     delete adaptedPoint.dateTo;
     delete adaptedPoint.isFavourite;

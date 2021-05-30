@@ -3,7 +3,7 @@ import {nanoid} from 'nanoid';
 
 const TYPES = ['taxi', 'bus', 'train', 'ship', 'transport', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
 
-export const BLANK_POINT = {
+const BLANK_POINT = {
   id: nanoid(),
   type: 'taxi',
   destination: {
@@ -31,7 +31,7 @@ const UpdateType = {
   INIT: 'INIT',
 };
 
-export const MenuItem = {
+const MenuItem = {
   TABLE: 'table',
   STATS: 'stats',
 };
@@ -42,126 +42,12 @@ const SortType = {
   DURATION_DOWN: 'duration-down',
 };
 
-export const FilterType = {
+const FilterType = {
   EVERYTHING: 'everything',
   FUTURE: 'future',
   PAST: 'past',
 };
 
-const possibleOffers = [
-  {
-    type: 'taxi',
-    offers: [
-      {
-        title: 'Upgrade to comfort-class',
-        price: 120,
-      }, {
-        title: 'Choose the radio station, music',
-        price: 60,
-      },
-    ]},
-  {
-    type: 'bus',
-    offers: [
-      {
-        title: 'Open your window',
-        price: 10,
-      }, {
-        title: 'Choose seats',
-        price: 30,
-      },
-    ],
-  },
-  {
-    type: 'train',
-    offers: [
-      {
-        title: 'Upgrade to comfort',
-        price: 100,
-      }, {
-        title: 'Choose lunch',
-        price: 60,
-      },
-    ],
-  },
-  {
-    type: 'ship',
-    offers: [
-      {
-        title: 'Choose dinner',
-        price: 90,
-      }, {
-        title: 'Choose the room',
-        price: 80,
-      },
-    ],
-  },
-  {
-    type: 'transport',
-    offers: [],
-  },
-  {
-    type: 'drive',
-    offers: [
-      {
-        title: 'Add luggage',
-        price: 100,
-      }, {
-        title: 'Choose music',
-        price: 20,
-      },
-    ],
-  },
-  {
-    type: 'flight',
-    offers: [
-      {
-        title: 'Add luggage',
-        price: 100,
-      }, {
-        title: 'Extra meal',
-        price: 20,
-      },
-    ],
-  },
-  {
-    type: 'check-in',
-    offers: [
-      {
-        title: 'Extra room',
-        price: 100,
-      }, {
-        title: 'Conditioner',
-        price: 20,
-      },
-    ],
-  },
-  {
-    type: 'sightseeing',
-    offers: [
-      {
-        title: 'Add photoshoot',
-        price: 100,
-      }, {
-        title: 'Extra tour',
-        price: 20,
-      },
-    ],
-  },
-  {
-    type: 'restaurant',
-    offers: [
-      {
-        title: 'Add beverages',
-        price: 100,
-      }, {
-        title: 'Choose place',
-        price: 20,
-      },
-    ],
-  },
-];
-
-export {SortType, TYPES, possibleOffers, UserAction, UpdateType};
+export {FilterType, MenuItem, BLANK_POINT, SortType, TYPES, UserAction, UpdateType};
 
 

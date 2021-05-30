@@ -15,7 +15,7 @@ export default class Menu extends AbstractView {
     this._menuClickHandler = this._menuClickHandler.bind(this);
   }
 
-  getTemplate () {
+  getTemplate() {
     return createMenuTemplate();
   }
 
@@ -38,7 +38,4 @@ export default class Menu extends AbstractView {
       }
     });
   }
-  //const item = this.getElement().querySelector(`[data-menu-button=${menuItem}]`);
-  //button.classList.toggle('trip-tabs__btn--active')
-
 }

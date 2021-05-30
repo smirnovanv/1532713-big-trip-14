@@ -59,23 +59,23 @@ const createRoutePointTemplate = (point) => {
 };
 
 export default class RoutePoint extends AbstractView {
-  constructor (point) {
+  constructor(point) {
     super();
     this._point = point;
     this._editClickHandler = this._editClickHandler.bind(this);
     this._favouriteClickHandler = this._favouriteClickHandler.bind(this);
   }
 
-  getTemplate () {
+  getTemplate() {
     return createRoutePointTemplate(this._point);
   }
 
-  _editClickHandler (evt) {
+  _editClickHandler(evt) {
     evt.preventDefault();
     this._callback.click();
   }
 
-  _favouriteClickHandler (evt) {
+  _favouriteClickHandler(evt) {
     evt.preventDefault();
     this._callback.favouriteClick();
   }
