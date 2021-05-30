@@ -5,7 +5,7 @@ import BoardPresenter from './presenter/board.js';
 import PointsModel from './model/points.js';
 import FilterModel from './model/filter.js';
 import FilterPresenter from './presenter/filter.js';
-import StatisticsView from './view/stats.js';
+import StatisticsView from './view/statistics.js';
 import {MenuItem, UpdateType} from './const.js';
 import Api from './api.js';
 import Destinations from './data/destinations.js';
