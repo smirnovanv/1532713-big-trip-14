@@ -13,16 +13,6 @@ const ChartLabels = {
   TIME: 'TIME-SPEND',
 };
 
-const getTypePrice = (points, type) => {
-  const reducer = (initialValue, price) => Number(initialValue) + Number(price);
-  return points.filter((point) => point.type === type).map((point) => point.basePrice).reduce(reducer);
-};
-
-const getTypeDuration = (points, type) => {
-  const reducer = (initialValue, time) => Number(initialValue) + Number(time);
-  return points.filter((point) => point.type === type).map((point) => getDuration(point)).reduce(reducer);
-};
-
 const moneyFormat = (val) => `€ ${val}`;
 const typeFormat = (val) => `${val} x`;
 const timeFormat = (val) => `${getFormattedDuration(val)}`;
@@ -40,13 +30,16 @@ const sortByDuration = (typeA, typeB) => {
 };
 
 const getChartData = (points, types) => {
+  const reducer = (initialValue, value) => Number(initialValue) + Number(value);
+
   const chartData = [];
   types.forEach((type) => {
+    const pointsByType = points.filter((point) => type === point.type);
     const typeTotalData = {
       name: type,
-      price: getTypePrice(points, type),
-      count: points.filter((point) => point.type === type).length,
-      time: getTypeDuration(points, type),
+      price: pointsByType.map((point) => point.basePrice).reduce(reducer),
+      count: pointsByType.length,
+      time: pointsByType.map((point) => getDuration(point)).reduce(reducer),
     };
     chartData.push(typeTotalData);
   });
